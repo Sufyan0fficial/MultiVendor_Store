@@ -1,2 +1,5 @@
 node_modules
 /Backend/Config/.env
+
+Uploads
+Frontend/.env
