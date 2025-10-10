@@ -1,10 +1,12 @@
-import { Checkbox, Form, Input } from 'antd'
+import { Checkbox, Form, Input, message, Spin } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useNavigate } from 'react-router';
 import { RxAvatar } from "react-icons/rx";
 import { Trimmer } from '../utils/trimmer';
 import { Register } from '../api/routes';
+import Spinner from '../components/Spinner';
+import { Message } from '../utils/notifymessage';
 
 
 function Signup() {
@@ -12,34 +14,44 @@ function Signup() {
     const [avatar, setAvatar] = useState(null)
     const navigate = useNavigate()
     const [form] = Form.useForm()
-    const handleSignup = async(values) => {
+    const [loading, setLoading] = useState(false)
+    const [messageApi, contextHolder] = message.useMessage();
+    const handleSignup = async (values) => {
+        setLoading(true)
         const data = Trimmer(values)
         const formData = new FormData()
-        formData.append('name',data?.name)
-        formData.append('email',data?.email)
-        formData.append('password',data?.password)
-        formData.append('avatar',data?.avatar)
+        formData.append('name', data?.name)
+        formData.append('email', data?.email)
+        formData.append('password', data?.password)
+        formData.append('avatar', data?.avatar)
 
         try {
             const res = await Register(formData)
-            
+            console.log('res is',res)
+            if (res.status == 200) {
+                Message(messageApi, 'success', 'Please Check your email to activate your account')
+               
+            }
+
         } catch (error) {
-            
+            console.log('errr is', error.message)
+        }
+        finally {
+            setLoading(false)
         }
     }
     const [finishFail, setFinishFail] = useState(false)
     return (
         <div className='min-h-[calc(100vh)] flex items-center justify-center px-6'>
-            {
-               console.log('current environment is',process.env.NODE_ENV) 
-            }
+
             <div className='max-h-max w-full md:max-w-[448px]'>
+            {contextHolder}
                 <div className='font-bold text-xl  md:text-3xl text-black md:tracking-tight mb-6 text-center '>Register as a new User</div>
                 <div className='px-6 md:px-10 py-10 border rounded-lg border-gray-200 shadow-lg '>
                     <Form
                         onFinish={handleSignup}
                         form={form}
-                        onFinishFailed={()=>
+                        onFinishFailed={() =>
                             setFinishFail(true)}
                         className=''
                     >
@@ -93,7 +105,6 @@ function Signup() {
                                         avatar ?
                                             <img src={URL.createObjectURL(avatar)} alt="" className='w-8 h-8 rounded-full flex justify-center items-center' />
                                             :
-
                                             <RxAvatar className='w-8 h-8' />
                                     }
 
@@ -103,7 +114,7 @@ function Signup() {
 
                                 </div>
                                 {
-                                    console.log('avatar error is',form.getFieldError('avat'))
+                                    console.log('avatar error is', form.getFieldError('avat'))
                                 }
                                 {form.getFieldError('avatar').length > 0 && (
                                     <div style={{ color: 'red', marginTop: 0 }}>
@@ -111,10 +122,15 @@ function Signup() {
                                     </div>
                                 )}
                             </div>
-
-                            <button className='text-white bg-blue-600 font-medium text-center w-full cursor-pointer rounded-md flex justify-center items-center py-2' type='submit'>
-                                Submit
-                            </button>
+                            <div className='relative'>
+                                <button disabled={loading} className='text-white bg-blue-600 font-medium text-center w-full cursor-pointer rounded-md flex justify-center items-center py-2' type='submit'>
+                                    Submit
+                                </button>
+                                {
+                                    loading &&
+                                    <Spinner />
+                                }
+                            </div>
                             <div className='flex items-center gap-2 mt-6'>
                                 <span>Already have an account?</span>
                                 <span className='text-blue-600 cursor-pointer' onClick={() => navigate('/login')}>Login</span>

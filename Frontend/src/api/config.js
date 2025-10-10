@@ -13,7 +13,7 @@ const axiosInstance = axios.create({
     "Content-Type": "application/json",
   },
   withCredentials: true,
-  timeout: 10000,
+  // timeout: 10000,
 });
 
 
@@ -31,7 +31,7 @@ axiosInstance.interceptors.request.use(
 
 
 axiosInstance.interceptors.response.use(
-  (response) => response.data,
+  (response) => response,
   (error) => {
     console.log("inerceptor caught error is ", error);
     return Promise.reject(error);

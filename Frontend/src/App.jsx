@@ -5,6 +5,7 @@ import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import ActivationPage from './pages/UserActivation'
 
 function App() {
   return(
@@ -12,6 +13,8 @@ function App() {
       <Routes>
           <Route path='/login' element={<Login />}/>
           <Route path='/signup' element={<Signup />}/>
+          <Route path='/activation/:id' element={<ActivationPage />}/>
+
       </Routes>
     </BrowserRouter>
   )
