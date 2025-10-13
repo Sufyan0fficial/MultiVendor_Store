@@ -6,6 +6,8 @@ import { Trimmer } from '../utils/trimmer';
 import { UserLogin } from '../api/routes';
 import { Message } from '../utils/notifymessage';
 import Spinner from '../components/Spinner';
+import { useDispatch } from 'react-redux';
+import { storeUserData } from '../Redux/UserSlice';
 
 
 function Login() {
@@ -13,6 +15,7 @@ function Login() {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const [messageApi, contextHolder] = message.useMessage()
+    const dispatch = useDispatch()
     const handleLogin = async (values) => {
         setLoading(true)
         const data = Trimmer(values)
@@ -20,6 +23,7 @@ function Login() {
             const res = await UserLogin(data)
             if (res.status === 200) {
                 Message(messageApi, 'success', 'User login successfully')
+                dispatch(storeUserData(res.data.data))
             }
         } catch (error) {
             Message(messageApi, 'error', error.response?.data?.message)

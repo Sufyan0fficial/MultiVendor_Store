@@ -6,14 +6,20 @@ import { BrowserRouter, Route, Routes } from 'react-router'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import ActivationPage from './pages/UserActivation'
+import Home from './pages/Home'
+import Layout from './components/Layout'
 
 function App() {
-  return(
+  return (
     <BrowserRouter>
       <Routes>
-          <Route path='/login' element={<Login />}/>
-          <Route path='/signup' element={<Signup />}/>
-          <Route path='/activation/:id' element={<ActivationPage />}/>
+        <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<Signup />} />
+        <Route path='/activation/:id' element={<ActivationPage />} />
+        <Route element={<Layout />}>
+
+          <Route path='/' element={<Home />} />
+        </Route>
 
       </Routes>
     </BrowserRouter>
