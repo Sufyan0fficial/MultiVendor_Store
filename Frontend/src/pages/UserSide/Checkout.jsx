@@ -122,23 +122,28 @@ function Checkout() {
             const price = (item?.discounted_price ? item?.discounted_price : item?.original_price) * item?.qty
             subtotal = subtotal + price
         })
+        console.log('simple subtotal',subtotal)
         const shippingCost = subtotal ? (subtotal * 0.1) : 0
         let discountPercentage = 0
         let total = shippingCost + subtotal
         if (couponAppliedProducts?.length > 0) {
-            const ps = cartData && cartData?.flatMap((cartitem, i) => {
-                const products = couponAppliedProducts?.map((item, index) => {
-                    const product = cartitem?._id === item?._id ? item : cartitem
-                    return product
-                })
-                return products
-            })
+            const ps = cartData && cartData?.map((cartitem, i) => {
+                const isCouponed = couponAppliedProducts?.find((item ,i)=>item?._id === cartitem?._id)
+                if(isCouponed){
+                    return isCouponed
+                }
+                else{
+                    return cartitem
+                
+            }})
             setPayload(ps)
+            console.log('ps',ps)
             const couponedSubtotal = ps?.length > 0 && ps.reduce((acc, current) => acc + ((current?.couponedPrice ? current?.couponedPrice : current?.discounted_price ? current?.discounted_price : current?.original_price) * current?.qty), 0)
 
 
             total = couponedSubtotal + shippingCost
             discountPercentage = Math.ceil(100 - ((couponedSubtotal / subtotal) * 100))
+            console.log('couponed subtotal ', couponedSubtotal )
         }
 
 

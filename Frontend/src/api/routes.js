@@ -157,3 +157,9 @@ export const getCustomerOrders= async(id)=>{
 export const getVendorOrders= async(id)=>{
   return axiosInstance.post(`/order/get-vendor-orders/${id}`)
 }
+export const getorderdetails= async(id)=>{
+  return axiosInstance.post(`/order/get-order-details/${id}`)
+}
+export const updateorderstatus= async(id,payload)=>{
+  return axiosInstance.patch(`/order/update-order-status/${id}`,payload)
+}

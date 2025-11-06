@@ -1,5 +1,6 @@
 const asyncWrapper = require("../Middleware/asyncWrapper");
-const OrderModel = require('../Models/ordersmodel')
+const OrderModel = require('../Models/ordersmodel');
+const customError = require("../utils/customError");
 
 const CreateOrders = asyncWrapper(async (req, res, next) => {
   const user = req.body?.user;
@@ -91,8 +92,37 @@ const GetCustomerOrders = asyncWrapper(async(req,res,next)=>{
     
 })
 
+const GetOrderDetails = asyncWrapper(async(req,res,next)=>{
+    const id = req.params?.id
+    const orderDetail = await OrderModel.findOne({_id:id})
+    if(!orderDetail){
+        return next(customError(400,'Order does not exist against this id'))
+    }
+    res.status(200).json({
+        success:true,
+        message:'Order details fetched successfully',
+        data:orderDetail
+    })
+})
+
+
+const updateOrderStatus = asyncWrapper(async(req,res,next)=>{
+    const id = req.params?.id
+    const orderStatus = req.body?.order_status
+    const updatedOrderDetails = await OrderModel.findOneAndUpdate({_id:id},{order_status:orderStatus},{
+        new:true,
+        runValidator:true
+    })
+    return res.status(201).json({
+        success:true,
+        data:updatedOrderDetails
+    })
+})
+
 module.exports = {
   CreateOrders,
   GetVendorOrders,
-  GetCustomerOrders
+  GetCustomerOrders,
+  GetOrderDetails,
+  updateOrderStatus
 };
