@@ -1,13 +1,13 @@
 import { Checkbox, Form, Input, message } from 'antd'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaEye, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useNavigate } from 'react-router';
-import { Trimmer } from '../utils/trimmer';
-import { UserLogin } from '../api/routes';
-import { Message } from '../utils/notifymessage';
-import Spinner from '../components/Spinner';
-import { useDispatch } from 'react-redux';
-import { storeUserData } from '../Redux/UserSlice';
+import { Trimmer } from '../../utils/trimmer';
+import { UserLogin } from '../../api/routes';
+import { Message } from '../../utils/notifymessage';
+import Spinner from '../../components/Spinner';
+import { useDispatch, useSelector } from 'react-redux';
+import { storeUserData } from '../../Redux/UserSlice';
 
 
 function Login() {
@@ -16,6 +16,18 @@ function Login() {
     const [loading, setLoading] = useState(false)
     const [messageApi, contextHolder] = message.useMessage()
     const dispatch = useDispatch()
+    const { userData } = useSelector(state => state.UserReducer)
+
+    useEffect(() => {
+        if (userData?._id) {
+            Message(messageApi, 'success', 'User already logged in')
+            setTimeout(() => {
+                navigate('/')
+
+            }, 1200)
+        }
+        else return
+    }, [])
     const handleLogin = async (values) => {
         setLoading(true)
         const data = Trimmer(values)
@@ -24,18 +36,20 @@ function Login() {
             if (res.status === 200) {
                 Message(messageApi, 'success', 'User login successfully')
                 dispatch(storeUserData(res.data.data))
+                navigate('/')
             }
         } catch (error) {
-            Message(messageApi, 'error', error.response?.data?.message)
+            Message(messageApi, 'error', (error.response?.data?.message || 'Failed to login, Please try again later'))
+            console.log('login error is ',error)
         }
         finally {
             setLoading(false)
         }
     }
     return (
-        <div className='min-h-[calc(100vh)] flex items-center justify-center px-6'>
+        <div className='min-h-[calc(100vh)] flex items-center justify-center px-4 '>
             {contextHolder}
-            <div className='max-h-max w-full md:max-w-[448px]'>
+            <div className='max-h-max w-full md:max-w-[448px] '>
                 <div className='font-bold text-xl  md:text-3xl text-black md:tracking-tight mb-6 text-center '>Login to your Account</div>
                 <div className='px-6 md:px-10 py-10 border rounded-lg border-gray-200 shadow-lg '>
                     <Form

@@ -1,1 +1,24 @@
 @import "tailwindcss";
+
+.gwidth{
+    @apply max-w-7xl px-6 md:px-10 w-full
+}
+
+
+/* Move uploaded items to the right of the upload box */
+.hide-scrollbar {
+  overflow-y: scroll; /* keep scroll active */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0;
+}
+
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+}
+
+.selector-padding .ant-select-selector {
+  @apply py-2;
+}
+

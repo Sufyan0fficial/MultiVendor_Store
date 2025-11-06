@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useNavigate } from 'react-router';
 import { RxAvatar } from "react-icons/rx";
-import { Trimmer } from '../utils/trimmer';
-import { Register } from '../api/routes';
-import Spinner from '../components/Spinner';
-import { Message } from '../utils/notifymessage';
+import { Trimmer } from '../../utils/trimmer';
+import { Register } from '../../api/routes';
+import Spinner from '../../components/Spinner';
+import { Message } from '../../utils/notifymessage';
+import { useSelector } from 'react-redux';
 
 
 function Signup() {
@@ -16,6 +17,17 @@ function Signup() {
     const [form] = Form.useForm()
     const [loading, setLoading] = useState(false)
     const [messageApi, contextHolder] = message.useMessage();
+    const {userData} = useSelector(state=>state?.UserReducer)
+    useEffect(() => {
+        if (userData?._id) {
+            Message(messageApi, 'success', 'User already Registered Successfully')
+            setTimeout(() => {
+                navigate('/')
+
+            }, 1200)
+        }
+        else return
+    }, [])
     const handleSignup = async (values) => {
         setLoading(true)
         const data = Trimmer(values)
@@ -27,14 +39,15 @@ function Signup() {
 
         try {
             const res = await Register(formData)
-            console.log('res is',res)
+            console.log('res is', res)
             if (res.status == 200) {
                 Message(messageApi, 'success', 'Please Check your email to activate your account')
-               
+
             }
 
         } catch (error) {
             console.log('errr is', error.message)
+            Message(messageApi,'error',error.response?.data?.message || 'Failed to proceed this registration')
         }
         finally {
             setLoading(false)
@@ -45,7 +58,7 @@ function Signup() {
         <div className='min-h-[calc(100vh)] flex items-center justify-center px-6'>
 
             <div className='max-h-max w-full md:max-w-[448px]'>
-            {contextHolder}
+                {contextHolder}
                 <div className='font-bold text-xl  md:text-3xl text-black md:tracking-tight mb-6 text-center '>Register as a new User</div>
                 <div className='px-6 md:px-10 py-10 border rounded-lg border-gray-200 shadow-lg '>
                     <Form

@@ -32,6 +32,19 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    pnone:{
+      type:String
+    },
+    addresses:[
+      {
+        country:String,
+        city:String,
+        state:String,
+        address1:String,
+        address2:String,
+        address_type:String
+      }
+    ]
   },
   {
     timestamps: true,

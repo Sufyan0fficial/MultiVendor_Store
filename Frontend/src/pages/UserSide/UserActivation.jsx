@@ -2,9 +2,9 @@ import React from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router'
-import Spinner from '../components/Spinner'
-import { ActivateUserAccount } from '../api/routes'
-import { Message } from '../utils/notifymessage'
+import Spinner from '../../components/Spinner'
+import { ActivateUserAccount } from '../../api/routes'
+import { Message } from '../../utils/notifymessage'
 import { message } from 'antd'
 
 function UserActivation() {

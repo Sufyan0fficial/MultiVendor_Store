@@ -1,4 +1,5 @@
 import axios from "axios";
+import { message } from "antd";
 
 const baseUrl =
   process.env.NODE_ENV === "production"
@@ -33,6 +34,9 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
+    if(error.status == "401"){
+      message.error('Unauthorized Identity !')
+    }
     console.log("inerceptor caught error is ", error);
     return Promise.reject(error);
   }

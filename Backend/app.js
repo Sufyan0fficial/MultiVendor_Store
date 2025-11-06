@@ -2,6 +2,13 @@ const express = require('express')
 const app = express()
 const ErrorHandler = require('./Middleware/ErrorHandler')
 const AuthRouter = require('./Routes/auth.routes')
+const SellerAuthRouter = require('./Routes/sellerAuth.routes')
+const ProductRouter = require('./Routes/Product.routes')
+const EventRouter = require('./Routes/event.routes.js')
+const CouponRouter = require('./Routes/coupon.routes.js')
+const UserRouter = require('./Routes/user.routes.js')
+const PaymentRouter = require('./Routes/payment.routes.js')
+const OrderRouter = require('./Routes/order.routes.js')
 const cors = require('cors')
 const path = require('path')
 
@@ -12,7 +19,10 @@ if(process.env.NODE_ENV !== 'Production'){
 }
 
 app.use(cors({
-    origin:'http://localhost:5173',
+    origin:
+    ['http://localhost:5173','http://192.168.1.8:5173','http://192.168.1.4:5173']
+    // 'http://192.168.100.5:5173'
+    ,
     credentials:true
 }))
 app.use(express.json())
@@ -20,6 +30,13 @@ app.use(express.json())
 
 app.use('/uploads',express.static(path.join(__dirname,'../Uploads')))
 app.use('/api/v1/auth',AuthRouter)
+app.use('/api/v1/seller/auth',SellerAuthRouter)
+app.use('/api/v1/seller/product',ProductRouter)
+app.use('/api/v1/seller/event',EventRouter)
+app.use('/api/v1/seller/coupon',CouponRouter)
+app.use('/api/v1/user',UserRouter)
+app.use('/api/v1/payment',PaymentRouter)
+app.use('/api/v1/order',OrderRouter)
 
 
 

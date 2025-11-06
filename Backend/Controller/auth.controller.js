@@ -76,8 +76,36 @@ const UserLogin = asyncWrapper(async(req,res,next)=>{
 
 })
 
+const Logout = asyncWrapper(async(req,res,next)=>{
+  return res.clearCookie('access_token',null,{httpOnly:true}).status(201).json({success:true,message:'User Logged out successfully'})
+})
+
+const UpdateProfile = asyncWrapper(async(req,res,next)=>{
+  const params = req.params?.id
+  const data = req.body
+  const file = req.file?.filename
+  let updatedData = {}
+  if(file){
+    updatedData = {...data,avatar:file}
+  }
+  else if(data?.password) {
+    var hashedPassword = bcrypt.hashSync(data?.password,10)
+    updatedData = {...data,password:hashedPassword}
+  }
+  else{
+    updatedData = data
+  }
+  const response = await UserModel.findByIdAndUpdate
+  (params,updatedData,{new:true, runValidators:true})
+
+  const {password:pass,...rest} = response?._doc
+  res.status(200).json({success:'true',message:'Profile Updated Successfully',data:rest})
+})
+
 module.exports = {
   UserRegistration,
   ActivateUser,
-  UserLogin
+  UserLogin,
+  Logout,
+  UpdateProfile
 };
