@@ -1,4 +1,5 @@
 const asyncWrapper = require("../Middleware/asyncWrapper");
+const customError = require("../utils/customError");
 
 //  console.log('keys are',process.env.STRIPE_SECRET_KEYS)
 
@@ -65,11 +66,13 @@ const SessionVerification = asyncWrapper(async(req,res,next)=>{
     const stripe = require("stripe")(process.env.STRIPE_SECRET_KEYS);
     const id = req.body?.id
     const response = await stripe.checkout.sessions.retrieve(id)
-    console.log('response is',response)
-    // if(response?.payment_status === 'paid'){
-    //     return
-    // }
-    res.status(200).end()
+    if(response?.payment_status !== 'paid'){
+        return next(customError(400,'Payment Verification Failed'))
+    }
+    res.status(200).json({
+      success:true,
+      message:'Payment Verified successfull'
+    })
 })
 
 module.exports = {

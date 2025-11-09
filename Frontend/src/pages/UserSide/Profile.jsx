@@ -74,7 +74,7 @@ function Profile() {
     <div className='mt-20 md:mt-0 '>
             <div className='max-w-7xl mx-auto pr-3 md:pr-0 md:!px-10'>
                 <div className='flex gap-2 md:gap-6 my-10'>
-                    <div className={`px-5 md:px-6 py-12 flex flex-col gap-y-6 bg-white rounded-xl border border-gray-200 ${width <= 768 ? '' : 'w-1/4'}`}>
+                    <div className={`px-5 md:px-6 py-12 flex flex-col gap-y-6 bg-white rounded-xl border border-gray-200 md:!max-h-[calc(100vh-200px)] !max-h-[calc(100vh-60px)] overflow-y-auto ${width <= 768 ? '' : 'w-1/4'}`}>
                         {
                             sideBarInfo?.map((item,index)=>{
                                 return(

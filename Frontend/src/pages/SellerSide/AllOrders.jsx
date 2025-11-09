@@ -30,7 +30,7 @@ function AllOrders() {
             try {
                 const res = await getVendorOrders(sellerData?._id)
                 if(res.status === 200){
-                    const orders = res.data?.data?.length > 0 && res.data?.data?.map((item)=>({...item,view_detail:<MdOutlineArrowOutward onClick={()=>navigate(`/shop/orders/${item?._id}`)}/>,
+                    const orders = res.data?.data?.length > 0 && res.data?.data?.map((item)=>({...item,view_detail:<MdOutlineArrowOutward onClick={()=>navigate(`/shop/orders/${item?._id}`)} className='cursor-pointer'/>,
                     }))
                     setOrders(orders)
                 }

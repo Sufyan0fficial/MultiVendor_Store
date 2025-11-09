@@ -123,6 +123,28 @@ const SearchProducts = asyncWrapper(async (req, res, next) => {
   });
 });
 
+
+const UpdateInventory = asyncWrapper(async(req,res,next)=>{
+  const items = req.body
+  
+  let updatedItem = []
+  items?.length > 0 && items?.forEach(async(item,i)=>{
+    const noOfItems = await ProductModel.findOne({_id: item?._id})
+    const stockLeft = noOfItems?.stock - item?.qty
+    const updatedStockLeft = stockLeft !== 0 ? stockLeft : 0
+  
+    var updatedStockedItem = await ProductModel.findOneAndUpdate({_id:item?._id},{stock:updatedStockLeft},{new:true})
+    updatedItem.push(updatedStockedItem)
+    console.log('updated Stocked item',updatedStockedItem, 'sotck left',updatedStockLeft)
+  })
+  res.status(200).json({
+    success:true,
+    message:'Inventory updated successfully',
+    data:updatedItem
+    
+  })
+  
+})
 module.exports = {
   CreateProduct,
   GetProducts,
@@ -130,4 +152,5 @@ module.exports = {
   getAllProducts,
   getProduct,
   SearchProducts,
+  UpdateInventory
 };

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Shipping from '../../components/Shipping'
 import Payment from '../../components/Payment'
 import { Trimmer } from '../../utils/trimmer'
-import { ApplyCoupon, CreateOrder, StripeCheckOutSession, StripeCheckOutSessionVerification } from '../../api/routes'
+import { ApplyCoupon, CreateOrder, StripeCheckOutSession, StripeCheckOutSessionVerification, updateInventory } from '../../api/routes'
 import { useDispatch, useSelector } from 'react-redux'
 import { Message } from '../../utils/notifymessage'
 import { message } from 'antd'
@@ -88,22 +88,28 @@ function Checkout() {
                     if (res.status === 200) {
                         Message(messageApi, 'success', 'Payment Verified successfully')
                         setPaymentSuccess(true)
-                        dispatch(EmptyCart())
                         const response = await CreateOrder({
                             user: userData,
                             items:orderDetails,
                             shipping_address:shipping_address
-
-                        })
-                        if(response.status == 200){
-                            navigate('/')
                             
+                        })
+                        const inventoryUpdatedRes = await updateInventory(cartData)
+                        if(inventoryUpdatedRes.status === 200){
+                            
+                            dispatch(EmptyCart())
+                            setTimeout(() => {
+                                
+                                navigate('/')
+                            }, 3000);
                         }
+                            
+                        
                         
                     }
                 } catch (error) {
                     console.log('error is',error)
-                    Message(messageApi, 'error', 'Failed to verify payment')
+                    Message(messageApi, 'error', 'Something went wrong')
                 }
                 finally {
                     setPaymentVerification(true)

@@ -89,6 +89,9 @@ export const fetchallProducts = async()=>{
 export const Filters = async(queryString)=>{
   return axiosInstance.get(`/seller/product/search?${queryString}`)
 }
+export const updateInventory = async(payload)=>{
+  return axiosInstance.patch(`/seller/product/update-inventory`,payload)
+}
 
 
 //Evetns
@@ -157,6 +160,7 @@ export const getCustomerOrders= async(id)=>{
 export const getVendorOrders= async(id)=>{
   return axiosInstance.post(`/order/get-vendor-orders/${id}`)
 }
+
 export const getorderdetails= async(id)=>{
   return axiosInstance.post(`/order/get-order-details/${id}`)
 }

@@ -5,14 +5,18 @@ import { FiMinus, FiPlus } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 import { decrementProductToCart, IncrementProductToCart, removeFromCart } from '../Redux/CartWishlistSlice';
 import { useNavigate } from 'react-router';
+import { Message } from '../utils/notifymessage';
+import { message } from 'antd';
 
 
 function Cart({ setOpenCart, count, setCount, openCart }) {
     const data = useSelector(state=>state?.CartWishlistReducer?.cartData)
     // const [Data, setData] = useState()
     const { screenWidth } = useSelector(state => state.UtilReducer)
+    const {cartData} = useSelector(state=>state?.CartWishlistReducer)
     const navigate = useNavigate()
     const [activeId, setActiveId] = useState(null)
+    const [messageApi,contextHolder] = message.useMessage()
     const dispatch = useDispatch()
     const totalPriceCalculator = () => {
 
@@ -56,7 +60,10 @@ function Cart({ setOpenCart, count, setCount, openCart }) {
     console.log('cart is rendering')
     return (
         <div className={`fixed inset-0  transition-opacity backdrop-blur-sm
- duration-500 ease-in-out  ${openCart ? 'opacity-100 pointer-events-auto'  :  'opacity-0 pointer-events-none min-h-[calc(100vh-60px)] md:min-h-screen'} z-10`}> 
+ duration-500 ease-in-out  ${openCart ? 'opacity-100 pointer-events-auto'  :  'opacity-0 pointer-events-none min-h-[calc(100vh-60px)] md:min-h-screen'} z-10`}>
+    {
+        contextHolder
+    } 
             <div className={`fixed top-0 right-0 w-[80%] md:w-1/2 lg:w-1/3 bg-white h-full z-10 pb-6 pt-2 select-none md:max-h-screen border border-gray-200 rounded-xl  md:min-h-screen flex flex-col transition-all duration-500 ease-in-out ${openCart ? 'translate-x-0' : 'translate-x-full'} z-50`}>
                 <div className='relative z-50'>
                     <div className='w-full flex justify-end pr-6 ' onClick={() => setOpenCart(false)}>
@@ -75,6 +82,7 @@ function Cart({ setOpenCart, count, setCount, openCart }) {
                     {
                         data?.length > 0 ?
                             data?.map((item, index) => {
+                                const Item = cartData?.length > 0 && cartData?.find((cartItem,i)=>cartItem?._id === item?._id)
                                 const price = item?.discounted_price ? item?.discounted_price : item?.original_price
                                 return (
 
@@ -84,7 +92,14 @@ function Cart({ setOpenCart, count, setCount, openCart }) {
 
                                             <div className='flex items-center '>
                                                 <div className='flex flex-col items-center gap-1'>
-                                                    <div className='bg-[#e44343] text-white text-lg font-medium w-[22px] cursor-pointer h-[22px] rounded-full flex items-center justify-center' onClick={() =>handleIncrement(item?._id)}>
+                                                    <div className='bg-[#e44343] text-white text-lg font-medium w-[22px] cursor-pointer h-[22px] rounded-full flex items-center justify-center' onClick={() =>
+                                                    {
+                                                        if(Item?.stock === item?.qty){
+                                                            return Message(messageApi,'warning','Stock gone finished')
+                                                        }
+                                                        handleIncrement(item?._id)
+                                                    }
+                                                        }>
                                                         <FiPlus /> 
                                                     </div>
                                                     <div className='text-lg font-semibold'>{item?.qty}</div>

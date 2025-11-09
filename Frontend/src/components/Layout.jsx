@@ -7,7 +7,7 @@ function Layout() {
   return (
     <div className='min-h-screen border flex flex-col '>
         <Header />
-        <main className='bg-[#f6f6f5] text-black '>
+        <main className='bg-[#f6f6f5] text-black flex-grow'>
           <Outlet />
         </main>
         <Footer />
