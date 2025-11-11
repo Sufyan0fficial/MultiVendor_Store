@@ -167,3 +167,19 @@ export const getorderdetails= async(id)=>{
 export const updateorderstatus= async(id,payload)=>{
   return axiosInstance.patch(`/order/update-order-status/${id}`,payload)
 }
+
+//Reviews
+
+export const createReview = async(payload) => {
+  return axiosInstance.post(`/review/create`, payload, {
+    headers: { "Content-Type": "multipart/form-data" }
+  })
+}
+
+export const getProductReviews = async(productId) => {
+  return axiosInstance.get(`/review/product/${productId}`)
+}
+
+export const getCustomerReviews = async(customerId) => {
+  return axiosInstance.get(`/review/customer/${customerId}`)
+}

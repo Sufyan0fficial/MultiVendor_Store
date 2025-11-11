@@ -4,14 +4,18 @@ import { useNavigate, useParams } from 'react-router'
 import { getorderdetails } from '../../api/routes'
 import { useState } from 'react'
 import { Message } from '../../utils/notifymessage'
-import { message, Select } from 'antd'
+import { message, Select, Button } from 'antd'
 import { IoArrowBack } from 'react-icons/io5'
+import { MdRateReview } from 'react-icons/md'
+import WriteReviewDialog from '../../components/WriteReviewDialog'
 
 function OrderDetail() {
     const {id} = useParams()
     const [orderDetails, setOrderDetails] = useState({})
     const [messageApi, contextHolder] = message.useMessage()
     const [qty, setQty] = useState(1)
+    const [reviewDialogVisible, setReviewDialogVisible] = useState(false)
+    const [selectedProduct, setSelectedProduct] = useState(null)
     const navigate = useNavigate()
     
     useEffect(()=>{
@@ -29,6 +33,17 @@ function OrderDetail() {
         }
         fetchCustomerOrderDetail()
     },[id])
+
+    const handleWriteReview = (product) => {
+        setSelectedProduct(product)
+        setReviewDialogVisible(true)
+    }
+
+    const handleCloseReviewDialog = () => {
+        setReviewDialogVisible(false)
+        setSelectedProduct(null)
+    }
+
   return (
           <div>
               {contextHolder}
@@ -108,6 +123,20 @@ function OrderDetail() {
                                                       <p className='font-semibold text-gray-800'>${(price * item.qty).toFixed(2)}</p>
                                                       <p className='text-sm text-gray-600'>${price} each</p>
                                                   </div>
+                                                  {/* Write Review Button - Only show if order is delivered */}
+                                                  {orderDetails.order_status === 'Delivered' && (
+                                                      <div className='ml-4'>
+                                                          <Button
+                                                              type="primary"
+                                                              icon={<MdRateReview />}
+                                                              onClick={() => handleWriteReview(item)}
+                                                              className="bg-blue-600 hover:bg-blue-700 border-blue-600 hover:border-blue-700"
+                                                              size="small"
+                                                          >
+                                                              Write Review
+                                                          </Button>
+                                                      </div>
+                                                  )}
                                               </div>
                                           )
                                           
@@ -119,26 +148,6 @@ function OrderDetail() {
   
                           {/* Sidebar */}
                           <div className='space-y-6'>
-  
-                              {/* Status Update */}
-                              {/* <div className='bg-white rounded-xl shadow-sm border border-gray-200 p-6'>
-                                  <h3 className='text-lg font-semibold text-gray-800 mb-4'>Update Status</h3>
-                                  <div className='space-y-4'>
-                                      <Select
-                                          value={orderStatus}
-                                          onChange={setOrderStatus}
-                                          className='w-full'
-                                          options={statusOptions}
-                                      />
-                                      <Button
-                                          type="primary"
-                                          className='w-full bg-blue-600 hover:bg-blue-700'
-                                          onClick={handleStatusUpdate}
-                                      >
-                                          Update Status
-                                      </Button>
-                                  </div>
-                              </div> */}
   
                               {/* Shipping Address */}
                               {
@@ -153,31 +162,18 @@ function OrderDetail() {
                                   </div>
                               </div>
                               }
-  
-                              {/* Order Summary */}
-                              {/* <div className='bg-white rounded-xl shadow-sm border border-gray-200 p-6'>
-                                  <h3 className='text-lg font-semibold text-gray-800 mb-4'>Order Summary</h3>
-                                  <div className='space-y-3'>
-                                      <div className='flex justify-between text-gray-700'>
-                                          <span>Subtotal</span>
-                                          <span>${(orderDetails.total_price - 10).toFixed(2)}</span>
-                                      </div>
-                                      <div className='flex justify-between text-gray-700'>
-                                          <span>Shipping</span>
-                                          <span>$10.00</span>
-                                      </div>
-                                      <div className='border-t border-gray-200 pt-3'>
-                                          <div className='flex justify-between font-semibold text-gray-800'>
-                                              <span>Total</span>
-                                              <span>${orderDetails.total_price}</span>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div> */}
                           </div>
                       </div>
                   </div>
               </div>
+
+              {/* Write Review Dialog */}
+              <WriteReviewDialog
+                  visible={reviewDialogVisible}
+                  onClose={handleCloseReviewDialog}
+                  product={selectedProduct}
+                  orderId={id}
+              />
           </div>
       )
 }

@@ -9,8 +9,12 @@ const CouponRouter = require('./Routes/coupon.routes.js')
 const UserRouter = require('./Routes/user.routes.js')
 const PaymentRouter = require('./Routes/payment.routes.js')
 const OrderRouter = require('./Routes/order.routes.js')
+const ReviewRouter = require('./Routes/review.routes.js')
 const cors = require('cors')
 const path = require('path')
+const cookieParser = require('cookie-parser')
+
+
 
 if(process.env.NODE_ENV !== 'Production'){
     require('dotenv').config({
@@ -18,9 +22,11 @@ if(process.env.NODE_ENV !== 'Production'){
     })
 }
 
+app.use(cookieParser())
+
 app.use(cors({
     origin:
-    ['http://localhost:5173','http://192.168.1.8:5173','http://192.168.1.4:5173','http://192.168.100.5:5173']
+    ['http://localhost:5173','http://192.168.1.8:5173','http://192.168.1.4:5173','http://192.168.100.5:5173','http://192.168.1.11:5173']
     
     ,
     credentials:true
@@ -37,6 +43,7 @@ app.use('/api/v1/seller/coupon',CouponRouter)
 app.use('/api/v1/user',UserRouter)
 app.use('/api/v1/payment',PaymentRouter)
 app.use('/api/v1/order',OrderRouter)
+app.use('/api/v1/review',ReviewRouter)
 
 
 

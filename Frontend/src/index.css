@@ -22,3 +22,21 @@
   @apply py-2;
 }
 
+/* Custom styles for Write Review Modal */
+.write-review-modal .ant-modal-content {
+  border-radius: 12px;
+}
+
+.write-review-modal .ant-upload-list-picture-card .ant-upload-list-item {
+  border-radius: 8px;
+}
+
+.write-review-modal .ant-rate {
+  color: #fadb14;
+}
+
+.write-review-modal .ant-rate-star-focused,
+.write-review-modal .ant-rate-star:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s;
+}

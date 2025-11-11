@@ -6,6 +6,7 @@ import { AiOutlineHeart } from "react-icons/ai";
 import { GrCart } from "react-icons/gr";
 import { productData } from '../../static/data';
 import ProductCard from '../../components/ProductCard';
+import ProductReviews from '../../components/ProductReviews';
 import { Message } from '../../utils/notifymessage';
 import { message } from 'antd';
 import { fetchProduct } from '../../api/routes';
@@ -34,6 +35,7 @@ function ProductDetailsPage() {
     console.log('related products are', relatedProducts)
     const [messageApi, contextHolder] = message.useMessage()
     const dispatch = useDispatch()
+    const [productReviews, setProductReviews] = useState([])
 
     useEffect(() => {
         const FetchProduct = async () => {
@@ -240,7 +242,7 @@ function ProductDetailsPage() {
 
                         </div>
                     </div>
-                    <div className='bg-[#f5f6fb] px-6 md:px-10 py-10 md:py-20 md:rounded-md border border-gray-200 rounded-lg mt-10'>
+                    <div className='bg-[#f5f6fb] px-6 md:px-10 py-10 md:pt-20  md:rounded-md border border-gray-200 rounded-lg mt-10'>
                         <div className='flex items-center justify-between text-lg md:text-2xl font-semibold tracking-tight leading-tight'>
                             <div className='max-w-max mb-1 relative cursor-pointer' onClick={() => setActiveInfoSection(1)}>
                                 <div>
@@ -277,8 +279,8 @@ function ProductDetailsPage() {
                             {
                                 activeInfoSection === 2 &&
 
-                                <div className='min-h-36 flex items-center justify-center'>
-                                    No Reviews Yet !
+                                <div className='min-h-36 max-h-96 flex items-center justify-center overflow-y-auto'>
+                                    <ProductReviews productId={product?._id} setReviews={setProductReviews} reviews={productReviews} />
                                 </div>
                             }
                             {
@@ -370,6 +372,11 @@ function ProductDetailsPage() {
 
 
                     </div>
+
+                    {/* Product Reviews Section */}
+                    {/* <div className='px-6 md:px-10 lg:px-0 mt-10'>
+                        <ProductReviews productId={product?._id} />
+                    </div> */}
 
                     <div className='px-6 md:px-10 lg:px-0'>
                         <div className='text-2xl md:text-3xl font-semibold mb-6 mt-10'>

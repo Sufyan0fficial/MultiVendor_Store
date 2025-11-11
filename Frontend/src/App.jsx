@@ -32,6 +32,7 @@ import SearchProducts from './pages/UserSide/SearchProducts.jsx'
 import AllOrders from './pages/SellerSide/AllOrders.jsx'
 import OrderDetails from './pages/SellerSide/OrderDetails.jsx'
 import OrderDetail from './pages/UserSide/OrderDetail.jsx'
+import TrackOrder from './pages/UserSide/TrackOrder.jsx'
 
 function App() {
   const dispatch = useDispatch()
@@ -57,6 +58,7 @@ function App() {
           <Route path='/search' element={<SearchProducts />} />
           <Route path='/checkout' element={<Checkout />} />
           <Route path='/orders/:id' element={<OrderDetail />} />
+          <Route path='/track-order/:id' element={<TrackOrder />} />
 
 
           <Route element={<PrivateRoute />}>

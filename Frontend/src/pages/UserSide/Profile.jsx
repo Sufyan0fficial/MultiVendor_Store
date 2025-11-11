@@ -39,27 +39,27 @@ function Profile() {
 
 
         },
-        {
-            text:'Track Order',
-            icon: <MdOutlineTrackChanges size={width <= 768 ? 20 : 25} color={activeMenu === 5 && 'red'}/>
+        // {
+        //     text:'Track Order',
+        //     icon: <MdOutlineTrackChanges size={width <= 768 ? 20 : 25} color={activeMenu === 5 && 'red'}/>
 
 
-        },
-        {
-            text:'Change Password',
-            icon: <RiLockPasswordLine size={width <= 768 ? 20 : 25} color={activeMenu === 6 && 'red'}/>
+        // },
+        // {
+        //     text:'Change Password',
+        //     icon: <RiLockPasswordLine size={width <= 768 ? 20 : 25} color={activeMenu === 6 && 'red'}/>
 
 
-        },
+        // },
         {
             text:'Address',
-            icon: <FaRegAddressBook size={width <= 768 ? 20 : 25} color={activeMenu === 7 && 'red'}/>
+            icon: <FaRegAddressBook size={width <= 768 ? 20 : 25} color={activeMenu === 5 && 'red'}/>
 
 
         },
         {
             text:'Logout',
-            icon: <IoMdLogOut size={width <= 768 ? 20 : 25} color={activeMenu === 8 && 'red'}/>
+            icon: <IoMdLogOut size={width <= 768 ? 20 : 25} color={activeMenu === 6 && 'red'}/>
 
 
         },

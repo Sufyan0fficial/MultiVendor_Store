@@ -49,6 +49,9 @@ const ProductSchema = new mongoose.Schema({
     discount:{
         type:Boolean,
         required:true
+    },
+    rating: {
+        type:Number
     }
 
 },{

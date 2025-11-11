@@ -8,8 +8,8 @@ import { getCustomerOrders } from '../api/routes.js';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import { Message } from '../utils/notifymessage.js';
-import { message } from 'antd';
-import { MdOutlineArrowOutward } from 'react-icons/md';
+import { message, Tooltip } from 'antd';
+import { MdInfoOutline, MdOutlineArrowOutward, MdOutlineTrackChanges } from 'react-icons/md';
 import { useNavigate } from 'react-router';
 
 function ProfilePageWrapper({activeMenu, setActiveMenu}) {
@@ -24,6 +24,7 @@ function ProfilePageWrapper({activeMenu, setActiveMenu}) {
         { key: "order_status", name: "Order Status" },
         { key: "payment_status", name: "Payment Status" },
         { key: "view_detail", name: "View Detail" },
+        { key: "track_order", name: "Track Order" },
     ];
 
     useEffect(()=>{
@@ -34,7 +35,15 @@ function ProfilePageWrapper({activeMenu, setActiveMenu}) {
                     const data = res.data?.data && res.data?.data?.map((item,i)=>{
                         return(
                             {
-                                ...item,view_detail : <MdOutlineArrowOutward onClick={()=>navigate(`/orders/${item?._id}`)} className='cursor-pointer'/>
+                                ...item,view_detail : <MdOutlineArrowOutward onClick={()=>navigate(`/orders/${item?._id}`)} className='cursor-pointer'/>,
+                                track_order: item?.order_status === 'Cancelled' ? 
+                                <Tooltip placement='top' title='Order has been cancelled' className='cursor-pointer'>
+                                <MdInfoOutline size={22} />
+                                </Tooltip>
+                                :
+
+                                <MdOutlineTrackChanges onClick={()=>navigate(`/track-order/${item?._id}`,{state:{status:item?.order_status}})} size={22} className='cursor-pointer'/>
+
                             }
                         )
                     })
@@ -71,22 +80,22 @@ function ProfilePageWrapper({activeMenu, setActiveMenu}) {
         }
         {
             activeMenu === 2 &&
-        <ProfileTable headers={headers} data={customerOrders} className={'min-w-[1000px]'}/>
+        <ProfileTable headers={headers} data={customerOrders} className={'min-w-[1200px]'}/>
         }
         {
             activeMenu === 3 &&
         <ProfileTable headers={headers} data={orders} className={'min-w-[800px]'}/>
         }
         {
-            activeMenu === 5 &&
+            activeMenu === 4 &&
         <ProfileTable headers={headers} data={orders} className={'min-w-[800px]'}/>
         }
         {
-            activeMenu === 8 &&
+            activeMenu === 6 &&
         <Logout setActiveMenu={setActiveMenu}/>
         }
         {
-            activeMenu === 7 &&
+            activeMenu === 5 &&
         <Addresses />
         }
         
