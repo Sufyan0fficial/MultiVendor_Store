@@ -4,20 +4,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router'
 import { Message } from '../../utils/notifymessage'
 import { message, Modal } from 'antd'
-<<<<<<< Updated upstream
-import { deleteSellerData, updateSellerData } from '../../Redux/SellerSlice'
-import { Get_ShopData, Logout_Seller } from '../../api/routes'
-import ProductCard from '../../components/ProductCard'
-import useToken from 'antd/es/theme/useToken'
-import EditShopDialog from '../../components/EditShopDialog'
-=======
 import { deleteSellerData } from '../../Redux/SellerSlice'
 import { Get_ShopData, Logout_Seller, Get_Events, getTotalShopReviews } from '../../api/routes'
 import ProductCard from '../../components/ProductCard'
 import EventCard from '../../components/EventCard'
 import ReviewCard from '../../components/ReviewCard'
 import LoadingSpinner from '../../components/LoadingSpinner'
->>>>>>> Stashed changes
 
 function ShopProfile() {
     const params = useParams()
@@ -26,20 +18,14 @@ function ShopProfile() {
     const [shopEvents, setShopEvents] = useState([])
     const [shopReviews, setShopReviews] = useState([])
     const [loading, setLoading] = useState(false)
-    console.log('shopdata',shopData)
     const [OpenSidebar, setOpenSidebar] = useState(false)
     const [renderData, setRenderData] = useState('products')
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [isShopOwner, setIsShopOwner] = useState(false)
     const [messageApi, contextHolder] = message.useMessage()
-    const [failedApi, setFailedApi] = useState(false)
     const [sureToLogout, setSureToLogout] = useState(false)
-<<<<<<< Updated upstream
-    const [editDialogOpen, setEditDialogOpen] = useState(false)
-=======
 
->>>>>>> Stashed changes
     const handleLogout = async () => {
         try {
             const res = await Logout_Seller()
@@ -59,7 +45,6 @@ function ShopProfile() {
         try {
             const res = await Get_Events(shopId)
             if (res.status === 200) {
-                // Filter only active events (not expired)
                 const activeEvents = res.data?.data?.filter(event => {
                     const eventEndDate = new Date(event.finish_date)
                     const now = new Date()
@@ -92,14 +77,8 @@ function ShopProfile() {
                 const res = await Get_ShopData(params?.id)
                 if (res.status === 200) {
                     setShopData(res.data?.data)
-                    if (sellerData?._id !== res.data?.data?._id) {
-                        setIsShopOwner(false)
-                    }
-                    else {
-                        setIsShopOwner(true)
-                    }
+                    setIsShopOwner(sellerData?._id === res.data?.data?._id)
                     
-                    // Fetch events and reviews for this shop
                     await Promise.all([
                         fetchShopEvents(res.data?.data?._id),
                         fetchShopReviews(res.data?.data?._id)
@@ -107,9 +86,7 @@ function ShopProfile() {
                 }
             } catch (error) {
                 Message(messageApi, 'error', 'Failed to fetch requested shop data')
-                setTimeout(() => {
-                    navigate('/')
-                }, 1000);
+                setTimeout(() => navigate('/'), 1000);
             } finally {
                 setLoading(false)
             }
@@ -124,160 +101,102 @@ function ShopProfile() {
     }
 
     return (
-        <div className='w-full bg-[#f6f6f5] '>
+        <div className='w-full bg-[#f6f6f5]'>
             {contextHolder}
 
-            <div className='w-screen max-w-screen flex gap-3 md:gap-6 min-h-[calc(100vh-60px)] md:min-h-[calc(100vh)] max-h-[calc(100vh-60px)] md:!max-h-[calc(100vh)'>
-                <>
-                    <div className={`w-max md:min-w-[25%] min-h-0 !overflow-y-auto px-4 md:px-6 hidden md:flex flex-col gap-y-6 md:gap-y-7 border-r border-gray-200 rounded-xl py-6 bg-white `}>
-                        <div className='w-full flex flex-col items-center'>
-                            <img src={`${import.meta.env.VITE_API_DEV}/uploads/${shopData?.avatar}`} alt="image" className='w-16 h-16 md:w-24 md:h-24 rounded-full border-2 border-green-500 ' />
-                            <div className='text-2xl font-bold tracking-tight capitalize'>
-                                {shopData?.shop_name}
-                            </div>
-                        </div>
-                        <div className='md:flex flex-col gap-y-6 md:gap-y-7 hidden'>
-                            <div className=''>
-                                <div className='md:text-xl tracking-tight font-semibold'>
-                                    Email
-                                </div>
-                                <div className='text-sm text-slate-500 md:text-base'>
-                                    {shopData?.email}
-                                </div>
-                            </div>
-                            <div className=''>
-                                <div className='md:text-xl tracking-tight font-semibold'>
-                                    Phone Number
-                                </div>
-                                <div className='text-sm text-slate-500 md:text-base'>
-                                    {shopData?.phone}
-                                </div>
-                            </div>
-                            <div className=''>
-                                <div className='md:text-xl tracking-tight font-semibold'>
-                                    Total Products
-                                </div>
-                                <div className='text-sm text-slate-500 md:text-base'>
-                                    {shopData?.products?.length || 0}
-                                </div>
-                            </div>
-                            <div className=''>
-                                <div className='md:text-xl tracking-tight font-semibold'>
-                                    Shop Ratings
-                                </div>
-                                <div className='text-sm text-slate-500 md:text-base'>
-                                    {calculateAverageRating()}/5 ({shopReviews.length} reviews)
-                                </div>
-                            </div>
-                            <div className=''>
-                                <div className='md:text-xl tracking-tight font-semibold'>
-                                    Running Events
-                                </div>
-                                <div className='text-sm text-slate-500 md:text-base'>
-                                    {shopEvents.length}
-                                </div>
-                            </div>
-                            <div className=''>
-                                <div className='md:text-xl tracking-tight font-semibold'>
-                                    Joined On
-                                </div>
-                                <div className='text-sm text-slate-500 md:text-sm font-medium'>
-                                    {(shopData?.createdAt)?.split('T')[0]}
-                                </div>
-                            </div>
-                            {
-                                isShopOwner && (
-                                    <div className='flex flex-col gap-y-2'>
-<<<<<<< Updated upstream
-
-                                        <div className='cursor-pointer text-white bg-black text-center w-full px-6 py-[10px] text-sm md:text-base rounded-md flex items-center justify-center' onClick={() => setEditDialogOpen(true)}>
-=======
-                                        <div className='cursor-pointer text-white bg-black text-center w-full px-6 py-[10px] text-sm md:text-base rounded-md flex items-center justify-center'>
->>>>>>> Stashed changes
-                                            Edit Shop
-                                        </div>
-                                        <div className='cursor-pointer text-white bg-black text-center w-full px-6 py-[10px] text-sm md:text-base rounded-md flex items-center justify-center' onClick={()=>setSureToLogout(true)}>
-                                            Logout
-                                        </div>
-                                    </div>
-                                )
-                            }
+            <div className='w-screen max-w-screen flex gap-3 md:gap-6 min-h-[calc(100vh-60px)] md:min-h-[calc(100vh)] max-h-[calc(100vh-60px)] md:!max-h-[calc(100vh)]'>
+                <div className={`w-max md:min-w-[25%] min-h-0 !overflow-y-auto px-4 md:px-6 hidden md:flex flex-col gap-y-6 md:gap-y-7 border-r border-gray-200 rounded-xl py-6 bg-white`}>
+                    <div className='w-full flex flex-col items-center'>
+                        <img src={`${import.meta.env.VITE_API_DEV}/uploads/${shopData?.avatar}`} alt="image" className='w-16 h-16 md:w-24 md:h-24 rounded-full border-2 border-green-500' />
+                        <div className='text-2xl font-bold tracking-tight capitalize'>
+                            {shopData?.shop_name}
                         </div>
                     </div>
-
-                    <div className={`min-w-max md:min-w-[25%] min-h-full !overflow-y-auto px-4 md:px-6 flex md:hidden flex-col gap-y-6 md:gap-y-7 border-r border-gray-200 rounded-xl py-6 bg-white max-w-max ${OpenSidebar ? 'min-w-[80%]' : 'w-max'} transition-all ease-in-out duration-500`}>
-                        <div className='flex items-center justify-between'>
-                            <img src={`${import.meta.env.VITE_API_DEV}/uploads/${shopData?.avatar}`} alt="image" className='w-16 h-16 md:w-24 md:h-24 rounded-full border-2 border-green-500 ' />
-                            <RxCross2 size={33} color='gray' className={`${OpenSidebar ? 'block' : 'hidden'}`} onClick={() => setOpenSidebar(false)} />
+                    <div className='md:flex flex-col gap-y-6 md:gap-y-7 hidden'>
+                        <div>
+                            <div className='md:text-xl tracking-tight font-semibold'>Email</div>
+                            <div className='text-sm text-slate-500 md:text-base'>{shopData?.email}</div>
                         </div>
-                        <div className={`block md:hidden cursor-pointer text-xs underline ${OpenSidebar ? 'hidden' : 'block'}`} onClick={() => setOpenSidebar(true)}>
-                            View Details
+                        <div>
+                            <div className='md:text-xl tracking-tight font-semibold'>Phone Number</div>
+                            <div className='text-sm text-slate-500 md:text-base'>{shopData?.phone}</div>
                         </div>
-                        <div className={` flex-col gap-y-6 md:gap-y-7 ${OpenSidebar ? 'flex' : 'hidden'} mt-6`}>
-                            <div className=''>
-                                <div className='md:text-xl tracking-tight font-semibold'>
-                                    Email
-                                </div>
-                                <div className='text-sm text-slate-500 md:text-base'>
-                                    {shopData?.email}
-                                </div>
-                            </div>
-                            <div className=''>
-                                <div className='md:text-xl tracking-tight font-semibold'>
-                                    Phone Number
-                                </div>
-                                <div className='text-sm text-slate-500 md:text-base'>
-                                    {shopData?.phone}
-                                </div>
-                            </div>
-                            <div className=''>
-                                <div className='md:text-xl tracking-tight font-semibold'>
-                                    Total Products
-                                </div>
-                                <div className='text-sm text-slate-500 md:text-base'>
-                                    {shopData?.products?.length || 0}
-                                </div>
-                            </div>
-                            <div className=''>
-                                <div className='md:text-xl tracking-tight font-semibold'>
-                                    Shop Ratings
-                                </div>
-                                <div className='text-sm text-slate-500 md:text-base'>
-                                    {calculateAverageRating()}/5 ({shopReviews.length} reviews)
-                                </div>
-                            </div>
-                            <div className=''>
-                                <div className='md:text-xl tracking-tight font-semibold'>
-                                    Running Events
-                                </div>
-                                <div className='text-sm text-slate-500 md:text-base'>
-                                    {shopEvents.length}
-                                </div>
-                            </div>
-                            <div className=''>
-                                <div className='md:text-xl tracking-tight font-semibold'>
-                                    Joined On
-                                </div>
-                                <div className='text-sm text-slate-500 md:text-sm font-medium'>
-                                    {(shopData?.createdAt)?.split('T')[0]}
-                                </div>
-                            </div>
-                            {isShopOwner && (
-                                <div className='flex flex-col gap-y-2'>
-                                    <div className='cursor-pointer text-white bg-black text-center w-full px-6 py-[10px] text-sm md:text-base rounded-md flex items-center justify-center'>
-                                        Edit Shop
-                                    </div>
-                                    <div className='cursor-pointer text-white bg-black text-center w-full px-6 py-[10px] text-sm md:text-base rounded-md flex items-center justify-center' onClick={()=>setSureToLogout(true)}>
-                                        Logout
-                                    </div>
-                                </div>
-                            )}
+                        <div>
+                            <div className='md:text-xl tracking-tight font-semibold'>Total Products</div>
+                            <div className='text-sm text-slate-500 md:text-base'>{shopData?.products?.length || 0}</div>
                         </div>
+                        <div>
+                            <div className='md:text-xl tracking-tight font-semibold'>Shop Ratings</div>
+                            <div className='text-sm text-slate-500 md:text-base'>{calculateAverageRating()}/5 ({shopReviews.length} reviews)</div>
+                        </div>
+                        <div>
+                            <div className='md:text-xl tracking-tight font-semibold'>Running Events</div>
+                            <div className='text-sm text-slate-500 md:text-base'>{shopEvents.length}</div>
+                        </div>
+                        <div>
+                            <div className='md:text-xl tracking-tight font-semibold'>Joined On</div>
+                            <div className='text-sm text-slate-500 md:text-sm font-medium'>{(shopData?.createdAt)?.split('T')[0]}</div>
+                        </div>
+                        {isShopOwner && (
+                            <div className='flex flex-col gap-y-2'>
+                                <div className='cursor-pointer text-white bg-black text-center w-full px-6 py-[10px] text-sm md:text-base rounded-md flex items-center justify-center'>
+                                    Edit Shop
+                                </div>
+                                <div className='cursor-pointer text-white bg-black text-center w-full px-6 py-[10px] text-sm md:text-base rounded-md flex items-center justify-center' onClick={()=>setSureToLogout(true)}>
+                                    Logout
+                                </div>
+                            </div>
+                        )}
                     </div>
-                </>
+                </div>
 
-                <div className=' flex flex-col !flex-grow py-10 mr-3 md:mr-6 px-3 md:px-6 border border-gray-200 bg-[#f6f6f5]'>
-                    {/* Shop Statistics Summary */}
+                <div className={`min-w-max md:min-w-[25%] min-h-full !overflow-y-auto px-4 md:px-6 flex md:hidden flex-col gap-y-6 md:gap-y-7 border-r border-gray-200 rounded-xl py-6 bg-white max-w-max ${OpenSidebar ? 'min-w-[80%]' : 'w-max'} transition-all ease-in-out duration-500`}>
+                    <div className='flex items-center justify-between'>
+                        <img src={`${import.meta.env.VITE_API_DEV}/uploads/${shopData?.avatar}`} alt="image" className='w-16 h-16 md:w-24 md:h-24 rounded-full border-2 border-green-500' />
+                        <RxCross2 size={33} color='gray' className={`${OpenSidebar ? 'block' : 'hidden'}`} onClick={() => setOpenSidebar(false)} />
+                    </div>
+                    <div className={`block md:hidden cursor-pointer text-xs underline ${OpenSidebar ? 'hidden' : 'block'}`} onClick={() => setOpenSidebar(true)}>
+                        View Details
+                    </div>
+                    <div className={`flex-col gap-y-6 md:gap-y-7 ${OpenSidebar ? 'flex' : 'hidden'} mt-6`}>
+                        <div>
+                            <div className='md:text-xl tracking-tight font-semibold'>Email</div>
+                            <div className='text-sm text-slate-500 md:text-base'>{shopData?.email}</div>
+                        </div>
+                        <div>
+                            <div className='md:text-xl tracking-tight font-semibold'>Phone Number</div>
+                            <div className='text-sm text-slate-500 md:text-base'>{shopData?.phone}</div>
+                        </div>
+                        <div>
+                            <div className='md:text-xl tracking-tight font-semibold'>Total Products</div>
+                            <div className='text-sm text-slate-500 md:text-base'>{shopData?.products?.length || 0}</div>
+                        </div>
+                        <div>
+                            <div className='md:text-xl tracking-tight font-semibold'>Shop Ratings</div>
+                            <div className='text-sm text-slate-500 md:text-base'>{calculateAverageRating()}/5 ({shopReviews.length} reviews)</div>
+                        </div>
+                        <div>
+                            <div className='md:text-xl tracking-tight font-semibold'>Running Events</div>
+                            <div className='text-sm text-slate-500 md:text-base'>{shopEvents.length}</div>
+                        </div>
+                        <div>
+                            <div className='md:text-xl tracking-tight font-semibold'>Joined On</div>
+                            <div className='text-sm text-slate-500 md:text-sm font-medium'>{(shopData?.createdAt)?.split('T')[0]}</div>
+                        </div>
+                        {isShopOwner && (
+                            <div className='flex flex-col gap-y-2'>
+                                <div className='cursor-pointer text-white bg-black text-center w-full px-6 py-[10px] text-sm md:text-base rounded-md flex items-center justify-center'>
+                                    Edit Shop
+                                </div>
+                                <div className='cursor-pointer text-white bg-black text-center w-full px-6 py-[10px] text-sm md:text-base rounded-md flex items-center justify-center' onClick={()=>setSureToLogout(true)}>
+                                    Logout
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                <div className='flex flex-col !flex-grow py-10 mr-3 md:mr-6 px-3 md:px-6 border border-gray-200 bg-[#f6f6f5]'>
                     <div className='grid grid-cols-2 md:grid-cols-4 gap-4 mb-8'>
                         <div className='bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center'>
                             <div className='text-2xl font-bold text-blue-600'>{shopData?.products?.length || 0}</div>
@@ -296,7 +215,8 @@ function ShopProfile() {
                             <div className='text-sm text-gray-600'>Rating</div>
                         </div>
                     </div>
-                    <div className='flex items-center gap-x-20 justify-between  w-full max-w-[calc(100vw-150px)] md:max-w-[calc(100vw-26%)] overflow-x-auto min-h-max'>
+
+                    <div className='flex items-center gap-x-20 justify-between w-full max-w-[calc(100vw-150px)] md:max-w-[calc(100vw-26%)] overflow-x-auto min-h-max'>
                         <div className='flex items-center gap-6 min-w-max'>
                             <div className={`md:text-xl font-semibold md:font-bold cursor-pointer min-w-max ${renderData === 'products' ? 'text-red-500' : ''}`} onClick={() => setRenderData('products')}>
                                 Shop Products ({shopData?.products?.length || 0})
@@ -308,20 +228,16 @@ function ShopProfile() {
                                 Shop Reviews ({shopReviews.length})
                             </div>
                         </div>
-
-                        {
-                            isShopOwner && (
-                                <div className='text-white bg-black text-center px-6 py-3 rounded-md flex items-center  cursor-pointer min-w-max text-sm md:text-base' onClick={() => navigate('/dashboard')}>
-                                    Go Dashboard
-                                </div>
-                            )
-                        }
+                        {isShopOwner && (
+                            <div className='text-white bg-black text-center px-6 py-3 rounded-md flex items-center cursor-pointer min-w-max text-sm md:text-base' onClick={() => navigate('/dashboard')}>
+                                Go Dashboard
+                            </div>
+                        )}
                     </div>
 
                     <div className='flex-grow overflow-y-auto mt-6 border-t border-gray-200 pt-6'>
                         {loading && <LoadingSpinner />}
 
-                        {/* Products Tab */}
                         {renderData === 'products' && !loading && (
                             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
                                 {shopData?.products?.length > 0 ? 
@@ -339,7 +255,6 @@ function ShopProfile() {
                             </div>
                         )}
 
-                        {/* Events Tab */}
                         {renderData === 'events' && !loading && (
                             <div className='space-y-6'>
                                 {shopEvents.length > 0 ? 
@@ -357,7 +272,6 @@ function ShopProfile() {
                             </div>
                         )}
 
-                        {/* Reviews Tab */}
                         {renderData === 'reviews' && !loading && (
                             <div className='space-y-4'>
                                 {shopReviews.length > 0 ? 
@@ -383,29 +297,7 @@ function ShopProfile() {
                 onCancel={()=>setSureToLogout(false)}
                 onOk={handleLogout}
                 title='Are you sure to logout'
-            >
-            </Modal>
-<<<<<<< Updated upstream
-
-
-            <EditShopDialog
-                open={editDialogOpen}
-                onClose={() => setEditDialogOpen(false)}
-                shopData={shopData}
-                onUpdate={(updatedData) => {
-                    setShopData(prevData => ({
-                        ...updatedData,
-                        products: prevData?.products || [],
-                        events: prevData?.events || []
-                    }))
-                    if (isShopOwner) {
-                        dispatch(updateSellerData(updatedData))
-                    }
-                }}
             />
-
-=======
->>>>>>> Stashed changes
         </div>
     )
 }
