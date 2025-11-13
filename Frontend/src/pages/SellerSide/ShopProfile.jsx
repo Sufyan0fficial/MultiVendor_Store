@@ -256,7 +256,7 @@ function ShopProfile() {
                                 ))
                                 :
                                 <div className='text-center'>
-                                    No Products Found
+                                    No Product Found
                                 </div>
                         )
                     }
