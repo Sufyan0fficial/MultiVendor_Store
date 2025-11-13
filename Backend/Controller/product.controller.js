@@ -132,8 +132,9 @@ const UpdateInventory = asyncWrapper(async(req,res,next)=>{
     const noOfItems = await ProductModel.findOne({_id: item?._id})
     const stockLeft = noOfItems?.stock - item?.qty
     const updatedStockLeft = stockLeft !== 0 ? stockLeft : 0
+    const soldItems = noOfItems?.sold_out + item?.qty
   
-    var updatedStockedItem = await ProductModel.findOneAndUpdate({_id:item?._id},{stock:updatedStockLeft},{new:true})
+    var updatedStockedItem = await ProductModel.findOneAndUpdate({_id:item?._id},{stock:updatedStockLeft,sold_out:soldItems},{new:true})
     updatedItem.push(updatedStockedItem)
     console.log('updated Stocked item',updatedStockedItem, 'sotck left',updatedStockLeft)
   })

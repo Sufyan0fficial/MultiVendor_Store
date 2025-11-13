@@ -73,7 +73,7 @@ function App() {
 
         <Route element={<SellerPrivateRoute />}>
           <Route path='/dashboard' element={<SellerLayout />}>
-          {/* <Route path='/dashboard' element={<Dashboard />} /> */}
+          <Route index element={<Dashboard />} />
           <Route element={<AllProducts />} path='products'/>
           <Route element={<CreateProduct />} path='create-product'/>
           <Route  path='orders' element={<AllOrders />}/>

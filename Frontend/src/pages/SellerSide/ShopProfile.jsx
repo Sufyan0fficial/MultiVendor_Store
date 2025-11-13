@@ -3,15 +3,17 @@ import { RxCross2 } from 'react-icons/rx'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router'
 import { Message } from '../../utils/notifymessage'
-import { message } from 'antd'
+import { message, Modal } from 'antd'
 import { deleteSellerData } from '../../Redux/SellerSlice'
 import { Get_ShopData, Logout_Seller } from '../../api/routes'
 import ProductCard from '../../components/ProductCard'
+import useToken from 'antd/es/theme/useToken'
 
 function ShopProfile() {
     const params = useParams()
     const { sellerData } = useSelector(state => state?.SellerReducer)
     const [shopData, setShopData] = useState(null)
+    console.log('shopdata',shopData)
     const [OpenSidebar, setOpenSidebar] = useState(false)
     const [renderData, setRenderData] = useState('products')
     const navigate = useNavigate()
@@ -19,6 +21,7 @@ function ShopProfile() {
     const [isShopOwner, setIsShopOwner] = useState(false)
     const [messageApi, contextHolder] = message.useMessage()
     const [failedApi, setFailedApi] = useState(false)
+    const [sureToLogout, setSureToLogout] = useState(false)
     const handleLogout = async () => {
         try {
             const res = await Logout_Seller()
@@ -97,11 +100,10 @@ function ShopProfile() {
                             </div>
                             <div className=''>
                                 <div className='md:text-xl tracking-tight font-semibold'>
-
                                     Total Products
                                 </div>
                                 <div className='text-sm text-slate-500 md:text-base'>
-                                    0
+                                    {shopData?.products?.length}
                                 </div>
                             </div>
                             <div className=''>
@@ -131,7 +133,7 @@ function ShopProfile() {
                                         <div className='cursor-pointer text-white bg-black text-center w-full px-6 py-[10px] text-sm md:text-base rounded-md flex items-center justify-center'>
                                             Edit Shop
                                         </div>
-                                        <div className='cursor-pointer text-white bg-black text-center w-full px-6 py-[10px] text-sm md:text-base rounded-md flex items-center justify-center' onClick={handleLogout}>
+                                        <div className='cursor-pointer text-white bg-black text-center w-full px-6 py-[10px] text-sm md:text-base rounded-md flex items-center justify-center' onClick={()=>setSureToLogout(true)}>
                                             Logout
                                         </div>
                                     </div>
@@ -177,7 +179,7 @@ function ShopProfile() {
                                     Total Products
                                 </div>
                                 <div className='text-sm text-slate-500 md:text-base'>
-                                    0
+                                    {shopData?.products?.length}
                                 </div>
                             </div>
                             <div className=''>
@@ -249,7 +251,7 @@ function ShopProfile() {
                                 shopData?.products?.map((item, index) => (
                                     <div key={index}>
 
-                                        <ProductCard product={item} shop={shopData} />
+                                        <ProductCard product={item} shop={shopData} isVendor={true} />
                                     </div>
                                 ))
                                 :
@@ -279,6 +281,14 @@ function ShopProfile() {
                 </div>
 
             </div>
+            <Modal
+            open={sureToLogout}
+            onCancel={()=>setSureToLogout(false)}
+            onOk={handleLogout}
+            title='Are you sure to logout'
+            >
+
+            </Modal>
 
 
         </div>

@@ -179,6 +179,9 @@ export const createReview = async(payload) => {
 export const getProductReviews = async(productId) => {
   return axiosInstance.get(`/review/product/${productId}`)
 }
+export const getTotalShopReviews = async(shopId) => {
+  return axiosInstance.get(`/review/shop/${shopId}`)
+}
 
 export const getCustomerReviews = async(customerId) => {
   return axiosInstance.get(`/review/customer/${customerId}`)

@@ -57,6 +57,17 @@ const getProductReviews = asyncWrapper(async (req, res) => {
         data: reviews
     });
 });
+const getShopReviews = asyncWrapper(async (req, res) => {
+    const { id } = req.params;
+    
+    const reviews = await ReviewModel.find({ shop_id: id})
+        .sort({ createdAt: -1 });
+    
+    res.status(200).json({
+        success: true,
+        data: reviews
+    });
+});
 
 const getCustomerReviews = asyncWrapper(async (req, res) => {
     const { customerId } = req.params;
@@ -73,5 +84,6 @@ const getCustomerReviews = asyncWrapper(async (req, res) => {
 module.exports = {
     createReview,
     getProductReviews,
-    getCustomerReviews
+    getCustomerReviews,
+    getShopReviews
 };

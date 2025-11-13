@@ -279,7 +279,7 @@ function ProductDetailsPage() {
                             {
                                 activeInfoSection === 2 &&
 
-                                <div className='min-h-36 max-h-96 flex items-center justify-center overflow-y-auto'>
+                                <div className='min-h-36 max-h-96 flex items-center justify-center overflow-y-auto pt-10'>
                                     <ProductReviews productId={product?._id} setReviews={setProductReviews} reviews={productReviews} />
                                 </div>
                             }

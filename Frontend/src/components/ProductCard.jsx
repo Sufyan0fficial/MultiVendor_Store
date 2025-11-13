@@ -7,7 +7,7 @@ import { Message } from '../utils/notifymessage.js'
 import { message } from 'antd'
 import { addProducttoCart, addProducttoWishlist, removeFromCart, removeFromWishlist } from '../Redux/CartWishlistSlice.js'
 
-const ProductCard = ({ product, shop }) => {
+const ProductCard = ({ product, shop, isVendor }) => {
   const navigate = useNavigate()
   const [addtoWishlist, setAddtoWishlist] = useState(false)
   const [addtoCart, setAddtoCart] = useState(false)
@@ -29,41 +29,41 @@ const ProductCard = ({ product, shop }) => {
   }
   const handleAddProducttoCart = () => {
     setAddtoCart(true)
-    dispatch(addProducttoCart({...product,qty:1}))
+    dispatch(addProducttoCart({ ...product, qty: 1 }))
     Message(messageApi, 'success', 'Product added to cart')
 
   }
 
-  const handleAddtoWishlist = ()=>{
+  const handleAddtoWishlist = () => {
     setAddtoWishlist(true)
     dispatch(addProducttoWishlist(product))
     Message(messageApi, 'success', 'Product added to wishlist')
 
   }
 
-  const handleRemoveFromWishlist = ()=>{
-      setAddtoWishlist(false)
+  const handleRemoveFromWishlist = () => {
+    setAddtoWishlist(false)
     dispatch(removeFromWishlist(product))
     Message(messageApi, 'warning', 'Product removed from wishlist')
   }
 
   useEffect(() => {
     const productInCart = cartData?.find((item, i) => item?._id === product?._id)
-    console.log('product added to CART is',productInCart)
+    console.log('product added to CART is', productInCart)
 
     if (productInCart) {
       setAddtoCart(true)
     }
-    else{
+    else {
       setAddtoCart(false)
     }
 
     const productInWishlist = wishlistData?.find((item, i) => item?._id === product?._id)
-    console.log('product added to wishlist is',productInWishlist)
+    console.log('product added to wishlist is', productInWishlist)
     if (productInWishlist) {
       setAddtoWishlist(true)
     }
-    else{
+    else {
       setAddtoWishlist(false)
     }
   }, [cartData, wishlistData])
@@ -91,38 +91,41 @@ const ProductCard = ({ product, shop }) => {
         contextHolder
       }
       {/* Action Buttons */}
-      <div className="absolute top-7 right-4 flex flex-col space-y-2 ">
-        <button className="p-2 bg-white rounded-full shadow-md cursor-pointer" 
-        onClick={() => {
-          if (addtoWishlist) {
-            handleRemoveFromWishlist()
-          }
-          else {
-            handleAddtoWishlist()
-          }
+      {
+        !isVendor &&
+        <div className="absolute top-7 right-4 flex flex-col space-y-2 ">
+          <button className="p-2 bg-white rounded-full shadow-md cursor-pointer"
+            onClick={() => {
+              if (addtoWishlist) {
+                handleRemoveFromWishlist()
+              }
+              else {
+                handleAddtoWishlist()
+              }
 
-        }
-        }
-        >
-          <FiHeart className="w-4 h-4 text-gray-600 " fill={addtoWishlist ? 'red' : 'white'} color={addtoWishlist ? 'red' : ''} title={addtoWishlist ? 'Remove from wishlist' : 'Add to wishtlist'} />
-        </button>
-        <button className="p-2 bg-white rounded-full shadow-md cursor-pointer" onClick={() => setViewDetails(true)}>
-          <FiEye className="w-4 h-4 text-gray-600" />
-        </button>
-        <button className="p-2 bg-white rounded-full shadow-md cursor-pointer" onClick={() => {
-          if (addtoCart) {
-            handleRemoveProductFromCart()
-          }
-          else {
-            handleAddProducttoCart()
-          }
+            }
+            }
+          >
+            <FiHeart className="w-4 h-4 text-gray-600 " fill={addtoWishlist ? 'red' : 'white'} color={addtoWishlist ? 'red' : ''} title={addtoWishlist ? 'Remove from wishlist' : 'Add to wishtlist'} />
+          </button>
+          <button className="p-2 bg-white rounded-full shadow-md cursor-pointer" onClick={() => setViewDetails(true)}>
+            <FiEye className="w-4 h-4 text-gray-600" />
+          </button>
+          <button className="p-2 bg-white rounded-full shadow-md cursor-pointer" onClick={() => {
+            if (addtoCart) {
+              handleRemoveProductFromCart()
+            }
+            else {
+              handleAddProducttoCart()
+            }
 
-        }
-        }
-        >
-          <FiShoppingCart className="w-4 h-4 text-gray-600" fill={addtoCart ? 'red' : 'white'} color={addtoCart ? 'red' : ''} title={addtoCart ? 'Remove from Cart' : 'Add to Cart'} />
-        </button>
-      </div>
+          }
+          }
+          >
+            <FiShoppingCart className="w-4 h-4 text-gray-600" fill={addtoCart ? 'red' : 'white'} color={addtoCart ? 'red' : ''} title={addtoCart ? 'Remove from Cart' : 'Add to Cart'} />
+          </button>
+        </div>
+      }
 
       {/* Product Image */}
       <div className="mb-4 overflow-hidden rounded-lg" onClick={() => navigate(`/products/${productId}`, { state: { product_id: product._id } })}>
