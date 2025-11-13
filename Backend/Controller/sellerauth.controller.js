@@ -62,6 +62,7 @@ const Logout = asyncWrapper(async(req,res,next)=>{
 })
 
 const FetchShopProfile = asyncWrapper(async(req,res,next)=>{
+    console.log('fetchign shop proifle data')
     const id = req.params?.id
     const shop = await SellerModel.findOne({_id:id})
     const {password, ...rest} =  shop?._doc
@@ -82,11 +83,39 @@ const FetchShopProfile = asyncWrapper(async(req,res,next)=>{
 
 })
 
+const UpdateShopProfile = asyncWrapper(async(req,res,next)=>{
+    const id = req.params?.id
+    const updateData = {...req.body}
+    
+    if(req.file?.filename){
+        updateData.avatar = req.file.filename
+    }
+    
+    if(updateData.password){
+        updateData.password = bcrypt.hashSync(updateData.password, 10)
+    }
+    
+    const updatedShop = await SellerModel.findByIdAndUpdate(id, updateData, {new: true})
+    if(!updatedShop){
+        return next(customError(404,'Shop not found'))
+    }
+    
+    const {password, ...rest} = updatedShop._doc
+    return res.status(200).json({
+        success: true,
+        message: 'Shop profile updated successfully',
+        data: rest
+    })
+})
+
 module.exports = {
     Signup,
     ActivateAccount,
     Login,
     Logout,
-    FetchShopProfile
+    FetchShopProfile,
+    UpdateShopProfile
 
 }
+
+
