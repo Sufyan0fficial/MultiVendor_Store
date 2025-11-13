@@ -16,7 +16,7 @@ process.on('uncaughtException',(error)=>{
 const Start = async()=>{
     try {
         await DBConnection(process.env.DB_STR)
-       server = app.listen(process.env.PORT,"0.0.0.0",()=>{
+        app.listen(process.env.PORT,"0.0.0.0",()=>{
             console.log(`app started at ${process.env.API_URL}`)
         })
     } catch (error) {

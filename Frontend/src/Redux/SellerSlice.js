@@ -13,12 +13,14 @@ export const SellerSlice = createSlice({
     },
     deleteSellerData:(state)=>{
         state.sellerData = null
+    },
+    updateSellerData: (state,action)=>{
+        state.sellerData = action.payload
     }
-
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { storeSellerData,deleteSellerData } = SellerSlice.actions
+export const { storeSellerData,deleteSellerData,updateSellerData } = SellerSlice.actions
 
 export default SellerSlice.reducer

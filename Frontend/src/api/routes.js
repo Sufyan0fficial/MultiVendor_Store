@@ -61,6 +61,12 @@ export const Get_ShopData = async(id)=>{
   return await axiosInstance.get(`/seller/auth/shop-profile/${id}`)
 }
 
+export const Update_ShopProfile = async(id, payload)=>{
+  return await axiosInstance.patch(`/seller/auth/updateProfile/${id}`, payload, {
+    headers: { "Content-Type": "multipart/form-data" }
+  })
+}
+
 
  
 //Products
@@ -186,3 +192,4 @@ export const getTotalShopReviews = async(shopId) => {
 export const getCustomerReviews = async(customerId) => {
   return axiosInstance.get(`/review/customer/${customerId}`)
 }
+

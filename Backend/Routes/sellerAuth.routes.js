@@ -4,14 +4,17 @@ const {
     ActivateAccount,
     Login,
     Logout,
-    FetchShopProfile
+    FetchShopProfile,
+    UpdateShopProfile
 } = require('../Controller/sellerauth.controller')
 const uploads = require('../utils/multerStorage')
+const VerifySeller = require('../Middleware/VerifySeller')
 
 router.route('/signup').post(uploads.single('avatar'),Signup)
 router.route('/activation').post(ActivateAccount)
 router.route('/login').post(Login)
 router.route('/logout').get(Logout)
+router.route('/updateProfile/:id').patch(uploads.single('avatar'),UpdateShopProfile)
 router.route('/shop-profile/:id').get(FetchShopProfile)
 
 

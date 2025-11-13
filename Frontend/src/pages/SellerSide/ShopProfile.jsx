@@ -4,10 +4,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router'
 import { Message } from '../../utils/notifymessage'
 import { message, Modal } from 'antd'
-import { deleteSellerData } from '../../Redux/SellerSlice'
+import { deleteSellerData, updateSellerData } from '../../Redux/SellerSlice'
 import { Get_ShopData, Logout_Seller } from '../../api/routes'
 import ProductCard from '../../components/ProductCard'
 import useToken from 'antd/es/theme/useToken'
+import EditShopDialog from '../../components/EditShopDialog'
 
 function ShopProfile() {
     const params = useParams()
@@ -22,6 +23,7 @@ function ShopProfile() {
     const [messageApi, contextHolder] = message.useMessage()
     const [failedApi, setFailedApi] = useState(false)
     const [sureToLogout, setSureToLogout] = useState(false)
+    const [editDialogOpen, setEditDialogOpen] = useState(false)
     const handleLogout = async () => {
         try {
             const res = await Logout_Seller()
@@ -130,7 +132,7 @@ function ShopProfile() {
 
                                     <div className='flex flex-col gap-y-2'>
 
-                                        <div className='cursor-pointer text-white bg-black text-center w-full px-6 py-[10px] text-sm md:text-base rounded-md flex items-center justify-center'>
+                                        <div className='cursor-pointer text-white bg-black text-center w-full px-6 py-[10px] text-sm md:text-base rounded-md flex items-center justify-center' onClick={() => setEditDialogOpen(true)}>
                                             Edit Shop
                                         </div>
                                         <div className='cursor-pointer text-white bg-black text-center w-full px-6 py-[10px] text-sm md:text-base rounded-md flex items-center justify-center' onClick={()=>setSureToLogout(true)}>
@@ -290,6 +292,22 @@ function ShopProfile() {
 
             </Modal>
 
+
+            <EditShopDialog
+                open={editDialogOpen}
+                onClose={() => setEditDialogOpen(false)}
+                shopData={shopData}
+                onUpdate={(updatedData) => {
+                    setShopData(prevData => ({
+                        ...updatedData,
+                        products: prevData?.products || [],
+                        events: prevData?.events || []
+                    }))
+                    if (isShopOwner) {
+                        dispatch(updateSellerData(updatedData))
+                    }
+                }}
+            />
 
         </div>
     )
