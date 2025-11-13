@@ -33,6 +33,7 @@ import AllOrders from './pages/SellerSide/AllOrders.jsx'
 import OrderDetails from './pages/SellerSide/OrderDetails.jsx'
 import OrderDetail from './pages/UserSide/OrderDetail.jsx'
 import TrackOrder from './pages/UserSide/TrackOrder.jsx'
+import WithdrawMoney from './pages/SellerSide/WithdrawMoney.jsx'
 
 function App() {
   const dispatch = useDispatch()
@@ -80,7 +81,7 @@ function App() {
           <Route  path='orders/:id' element={<OrderDetails />}/>
           <Route  path='create-event' element={<CreateEvent />}/>
           <Route  path='events' element={<AllEvents />}/>
-          <Route  path='withdraw-money'/>
+          <Route  path='withdraw-money' element={<WithdrawMoney />}/>
           <Route  path='inbox'/>
           <Route  path='discount-codes' element={<CouponCodes />}/>
           <Route  path='refunds'/>

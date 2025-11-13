@@ -6,6 +6,8 @@ const bcrypt = require('bcryptjs');
 const customError = require("../utils/customError");
 const ProductModel = require('../Models/Product.model');
 const EventModel = require("../Models/event.model");
+const WithdrawalModel = require('../Models/withdrawal.model');
+const OrderModel = require('../Models/ordersmodel');
 
 
 const Signup = asyncWrapper(async(req,res,next)=>{
@@ -108,14 +110,121 @@ const UpdateShopProfile = asyncWrapper(async(req,res,next)=>{
     })
 })
 
+const RequestWithdrawal = asyncWrapper(async(req, res, next) => {
+    const { amount, method, account_info } = req.body
+    const seller_id = req.seller?.id
+    
+    if (!seller_id) {
+        return next(customError(401, 'Unauthorized'))
+    }
+    
+    // Calculate available balance
+    const completedOrders = await OrderModel.find({
+        shop_id: seller_id,
+        order_status: { $in: ['Delivered', 'completed'] }
+    })
+    
+    const totalRevenue = completedOrders.reduce((sum, order) => sum + order.total_price, 0)
+    
+    // Get total withdrawn and pending amounts
+    const withdrawals = await WithdrawalModel.find({ seller_id })
+    const totalWithdrawn = withdrawals
+        .filter(w => w.status === 'completed')
+        .reduce((sum, w) => sum + w.amount, 0)
+    const pendingWithdrawals = withdrawals
+        .filter(w => w.status === 'pending' || w.status === 'processing')
+        .reduce((sum, w) => sum + w.amount, 0)
+    
+    const availableBalance = totalRevenue - totalWithdrawn - pendingWithdrawals
+    
+    if (amount > availableBalance) {
+        return next(customError(400, 'Insufficient balance'))
+    }
+    
+    if (amount < 50) {
+        return next(customError(400, 'Minimum withdrawal amount is $50'))
+    }
+    
+    // Calculate processing fee (2%)
+    const processing_fee = amount * 0.02
+    const net_amount = amount - processing_fee
+    
+    const withdrawal = await WithdrawalModel.create({
+        seller_id,
+        amount,
+        method,
+        account_info,
+        processing_fee,
+        net_amount
+    })
+    
+    return res.status(201).json({
+        success: true,
+        message: 'Withdrawal request submitted successfully',
+        data: withdrawal
+    })
+})
+
+const GetWithdrawalHistory = asyncWrapper(async(req, res, next) => {
+    const seller_id = req.seller?.id
+    
+    if (!seller_id) {
+        return next(customError(401, 'Unauthorized'))
+    }
+    
+    const withdrawals = await WithdrawalModel.find({ seller_id }).sort({ createdAt: -1 })
+    
+    return res.status(200).json({
+        success: true,
+        data: withdrawals
+    })
+})
+
+const GetFinancialStats = asyncWrapper(async(req, res, next) => {
+    const seller_id = req.seller?.id
+    
+    if (!seller_id) {
+        return next(customError(401, 'Unauthorized'))
+    }
+    
+    // Get completed orders
+    const completedOrders = await OrderModel.find({
+        shop_id: seller_id,
+        order_status: { $in: ['Delivered', 'completed'] }
+    })
+    
+    const totalRevenue = completedOrders.reduce((sum, order) => sum + order.total_price, 0)
+    
+    // Get withdrawal stats
+    const withdrawals = await WithdrawalModel.find({ seller_id })
+    const totalWithdrawn = withdrawals
+        .filter(w => w.status === 'completed')
+        .reduce((sum, w) => sum + w.amount, 0)
+    const pendingWithdrawals = withdrawals
+        .filter(w => w.status === 'pending' || w.status === 'processing')
+        .reduce((sum, w) => sum + w.amount, 0)
+    
+    const availableBalance = Math.max(0, totalRevenue - totalWithdrawn - pendingWithdrawals)
+    
+    return res.status(200).json({
+        success: true,
+        data: {
+            totalRevenue,
+            availableBalance,
+            pendingWithdrawals,
+            totalWithdrawn
+        }
+    })
+})
+
 module.exports = {
     Signup,
     ActivateAccount,
     Login,
     Logout,
     FetchShopProfile,
-    UpdateShopProfile
-
+    UpdateShopProfile,
+    RequestWithdrawal,
+    GetWithdrawalHistory,
+    GetFinancialStats
 }
-
-

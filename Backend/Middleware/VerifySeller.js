@@ -7,8 +7,9 @@ const VerifySeller = asyncWrapper(async(req,res,next)=>{
     if(!token){
         return next(customError(401,'Unauthorized Identity !'))
     }
-    jwt.verify({id:token},process.env.JWT_SECRETS,(err, seller)=>{
+    jwt.verify(token,process.env.JWT_SECRETS,(err, seller)=>{
         if(err){
+            console.log('err is',err)
             return next(customError(401,'Forbidden ! Something went wrong'))
         }
         req.seller = seller
