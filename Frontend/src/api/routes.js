@@ -193,3 +193,15 @@ export const getCustomerReviews = async(customerId) => {
   return axiosInstance.get(`/review/customer/${customerId}`)
 }
 
+// Withdrawal APIs
+export const requestWithdrawal = async(payload) => {
+  return axiosInstance.post(`/seller/auth/withdrawal/request`, payload)
+}
+
+export const getWithdrawalHistory = async() => {
+  return axiosInstance.get(`/seller/auth/withdrawal/history`)
+}
+
+export const getFinancialStats = async() => {
+  return axiosInstance.get(`/seller/auth/financial-stats`)
+}

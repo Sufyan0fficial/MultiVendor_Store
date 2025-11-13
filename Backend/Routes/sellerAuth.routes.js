@@ -19,3 +19,10 @@ router.route('/shop-profile/:id').get(FetchShopProfile)
 
 
 module.exports = router
+// Import withdrawal functions
+const { RequestWithdrawal, GetWithdrawalHistory, GetFinancialStats } = require('../Controller/sellerauth.controller')
+
+// Withdrawal routes
+router.route('/withdrawal/request').post(VerifySeller, RequestWithdrawal)
+router.route('/withdrawal/history').get(VerifySeller, GetWithdrawalHistory)
+router.route('/financial-stats').get(VerifySeller, GetFinancialStats)
