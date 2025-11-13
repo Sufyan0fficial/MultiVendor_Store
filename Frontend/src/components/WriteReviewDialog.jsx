@@ -28,6 +28,7 @@ const WriteReviewDialog = ({ visible, onClose, product, orderId }) => {
         setLoading(true);
         try {
             const formData = new FormData();
+            formData.append('shop_id', product?.shop?._id);
             formData.append('customer_id', userData._id);
             formData.append('product_id', product._id);
             formData.append('order_id', orderId);

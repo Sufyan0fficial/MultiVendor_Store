@@ -4,7 +4,7 @@ const CustomError = require('../utils/customError');
 const ProductModel = require('../Models/Product.model')
 
 const createReview = asyncWrapper(async (req, res, next) => {
-    const { customer_id, product_id, order_id, rating, comment, customer_name, customer_avatar } = req.body;
+    const { customer_id, product_id, order_id, rating, comment, customer_name, customer_avatar,shop_id } = req.body;
     
     // Check if review already exists for this product and order
     const existingReview = await ReviewModel.findOne({ 
@@ -28,7 +28,8 @@ const createReview = asyncWrapper(async (req, res, next) => {
         comment,
         images,
         customer_name,
-        customer_avatar
+        customer_avatar,
+        shop_id
     });
 
     const products = await ReviewModel.find({product_id:product_id})

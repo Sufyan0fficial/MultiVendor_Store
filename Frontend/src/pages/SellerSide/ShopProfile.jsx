@@ -3,10 +3,12 @@ import { RxCross2 } from 'react-icons/rx'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router'
 import { Message } from '../../utils/notifymessage'
-import { message, Modal } from 'antd'
+import { message, Modal, Spin } from 'antd'
 import { deleteSellerData, updateSellerData } from '../../Redux/SellerSlice'
-import { Get_ShopData, Logout_Seller } from '../../api/routes'
+import { Get_ShopData, Logout_Seller, Get_Events, getTotalShopReviews } from '../../api/routes'
 import ProductCard from '../../components/ProductCard'
+import EventCard from '../../components/EventCard'
+import ReviewCard from '../../components/ReviewCard'
 import useToken from 'antd/es/theme/useToken'
 import EditShopDialog from '../../components/EditShopDialog'
 
@@ -24,6 +26,43 @@ function ShopProfile() {
     const [failedApi, setFailedApi] = useState(false)
     const [sureToLogout, setSureToLogout] = useState(false)
     const [editDialogOpen, setEditDialogOpen] = useState(false)
+    const [shopEvents, setShopEvents] = useState([])
+    const [shopReviews, setShopReviews] = useState([])
+    const [loadingEvents, setLoadingEvents] = useState(false)
+    const [loadingReviews, setLoadingReviews] = useState(false)
+    
+    // Fetch shop events
+    const fetchShopEvents = async (shopId) => {
+        try {
+            setLoadingEvents(true)
+            const res = await Get_Events(shopId)
+            if (res.status === 200) {
+                setShopEvents(res.data?.data || [])
+            }
+        } catch (error) {
+            console.error('Failed to fetch shop events:', error)
+            setShopEvents([])
+        } finally {
+            setLoadingEvents(false)
+        }
+    }
+
+    // Fetch shop reviews
+    const fetchShopReviews = async (shopId) => {
+        try {
+            setLoadingReviews(true)
+            const res = await getTotalShopReviews(shopId)
+            if (res.status === 200) {
+                setShopReviews(res.data?.data || [])
+            }
+        } catch (error) {
+            console.error('Failed to fetch shop reviews:', error)
+            setShopReviews([])
+        } finally {
+            setLoadingReviews(false)
+        }
+    }
+    
     const handleLogout = async () => {
         try {
             const res = await Logout_Seller()
@@ -50,6 +89,9 @@ function ShopProfile() {
                     else {
                         setIsShopOwner(true)
                     }
+                    // Fetch events and reviews for this shop
+                    fetchShopEvents(params?.id)
+                    fetchShopReviews(params?.id)
                 }
             } catch (error) {
                 Message(messageApi, 'error', 'Failed to fetch requested shop data')
@@ -268,14 +310,44 @@ function ShopProfile() {
                         {
                             renderData === 'events' && (
                                 <div>
-                                    events
+                                    {loadingEvents ? (
+                                        <div className='flex justify-center items-center py-20'>
+                                            <Spin size="large" />
+                                        </div>
+                                    ) : shopEvents.length > 0 ? (
+                                        <div className='flex flex-col gap-6'>
+                                            {shopEvents.map((event, index) => (
+                                                <EventCard key={index} data={event} />
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className='text-center py-20 text-gray-500'>
+                                            <div className='text-xl font-semibold mb-2'>No Running Events</div>
+                                            <div>This shop doesn't have any active events at the moment.</div>
+                                        </div>
+                                    )}
                                 </div>
                             )
                         }
                         {
                             renderData === 'reviews' && (
                                 <div>
-                                    reviews
+                                    {loadingReviews ? (
+                                        <div className='flex justify-center items-center py-20'>
+                                            <Spin size="large" />
+                                        </div>
+                                    ) : shopReviews.length > 0 ? (
+                                        <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                                            {shopReviews.map((review, index) => (
+                                                <ReviewCard key={index} review={review} />
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className='text-center py-20 text-gray-500'>
+                                            <div className='text-xl font-semibold mb-2'>No Reviews Yet</div>
+                                            <div>This shop hasn't received any customer reviews yet.</div>
+                                        </div>
+                                    )}
                                 </div>
                             )
                         }
