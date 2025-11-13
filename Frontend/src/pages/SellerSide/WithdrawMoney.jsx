@@ -16,7 +16,8 @@ import {
   Spin,
   Divider,
   Typography,
-  Space
+  Space,
+  InputNumber
 } from 'antd'
 import { 
   DollarOutlined, 
@@ -419,11 +420,12 @@ function WithdrawMoney() {
               }
             ]}
           >
-            <Input
+            <InputNumber
               prefix="$"
               type="number"
               placeholder="Enter amount"
               size="large"
+              style={{width:`100%`}}
             />
           </Form.Item>
 
