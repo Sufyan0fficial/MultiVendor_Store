@@ -57,11 +57,18 @@ const getProductReviews = asyncWrapper(async (req, res) => {
         data: reviews
     });
 });
+
 const getShopReviews = asyncWrapper(async (req, res) => {
     const { id } = req.params;
     
-    const reviews = await ReviewModel.find({ shop_id: id})
-        .sort({ createdAt: -1 });
+    // First, find all products belonging to this shop
+    const shopProducts = await ProductModel.find({ shop_id: id });
+    const productIds = shopProducts.map(product => product._id.toString());
+    
+    // Then find all reviews for these products
+    const reviews = await ReviewModel.find({ 
+        product_id: { $in: productIds }
+    }).sort({ createdAt: -1 });
     
     res.status(200).json({
         success: true,
