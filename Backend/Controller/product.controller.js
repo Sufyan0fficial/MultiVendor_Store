@@ -75,7 +75,6 @@ const getProduct = asyncWrapper(async (req, res, next) => {
     category: product?.category,
   });
   const data = { ...product?._doc, relatedProducts: relatedProducts, shop:{...product?._doc?.shop,total_products:shopTotalProducts }};
-  console.log("product is", product);
   if (!product) {
     return next(customError(400, "Requested Product does not exist"));
   }

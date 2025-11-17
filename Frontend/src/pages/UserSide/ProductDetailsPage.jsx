@@ -14,6 +14,11 @@ import { MdArrowOutward } from 'react-icons/md';
 import { FiHeart } from 'react-icons/fi';
 import { addProducttoCart, addProducttoWishlist, removeFromCart, removeFromWishlist } from '../../Redux/CartWishlistSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import {socket} from '../../../socketio'
+// const socket = io('http://192.168.100.5:3000',{
+//     autoConnect:true
+// });
+
 
 
 
@@ -36,6 +41,7 @@ function ProductDetailsPage() {
     const [messageApi, contextHolder] = message.useMessage()
     const dispatch = useDispatch()
     const [productReviews, setProductReviews] = useState([])
+
 
     useEffect(() => {
         const FetchProduct = async () => {
@@ -104,8 +110,11 @@ function ProductDetailsPage() {
     }
 
     
+const handleChat = () => {
+  console.log("function is triggering");
 
-
+  socket.emit('send_message','hi')
+};
 
 
     return (
@@ -228,7 +237,7 @@ function ProductDetailsPage() {
 
                                 </div>
                                 <div className='flex items-center gap-x-6 flex-wrap gap-y-2'>
-                                    <div className='flex items-center gap-2 bg-[#6443d1] px-4 py-[10px] rounded-md text-white max-w-max cursor-pointer '>
+                                    <div className='flex items-center gap-2 bg-[#6443d1] px-4 py-[10px] rounded-md text-white max-w-max cursor-pointer border border-black' onClick={handleChat}>
                                         <div>Send Message</div>
                                         <BiMessageDetail />
 
