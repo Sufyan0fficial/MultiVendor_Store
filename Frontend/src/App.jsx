@@ -34,6 +34,7 @@ import OrderDetails from './pages/SellerSide/OrderDetails.jsx'
 import OrderDetail from './pages/UserSide/OrderDetail.jsx'
 import TrackOrder from './pages/UserSide/TrackOrder.jsx'
 import WithdrawMoney from './pages/SellerSide/WithdrawMoney.jsx'
+import InboxDemo from './pages/UserSide/InboxDemo.jsx'
 
 function App() {
   const dispatch = useDispatch()
@@ -60,6 +61,7 @@ function App() {
           <Route path='/checkout' element={<Checkout />} />
           <Route path='/orders/:id' element={<OrderDetail />} />
           <Route path='/track-order/:id' element={<TrackOrder />} />
+          <Route path='/inbox' element={<InboxDemo />} />
 
 
           <Route element={<PrivateRoute />}>

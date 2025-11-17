@@ -15,11 +15,6 @@ import { FiHeart } from 'react-icons/fi';
 import { addProducttoCart, addProducttoWishlist, removeFromCart, removeFromWishlist } from '../../Redux/CartWishlistSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import {socket} from '../../../socketio'
-// const socket = io('http://192.168.100.5:3000',{
-//     autoConnect:true
-// });
-
-
 
 
 function ProductDetailsPage() {

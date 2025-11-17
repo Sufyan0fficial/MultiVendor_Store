@@ -3,6 +3,7 @@ import ProfileUpdate from './ProfileUpdate'
 import ProfileTable from './Table.jsx'
 import Logout from './Logout.jsx'
 import Addresses from './Addresses.jsx';
+import CustomerInbox from './CustomerInbox.jsx';
 import { useEffect } from 'react';
 import { getCustomerOrders } from '../api/routes.js';
 import { useSelector } from 'react-redux';
@@ -88,7 +89,7 @@ function ProfilePageWrapper({activeMenu, setActiveMenu}) {
         }
         {
             activeMenu === 4 &&
-        <ProfileTable headers={headers} data={orders} className={'min-w-[800px]'}/>
+        <CustomerInbox />
         }
         {
             activeMenu === 6 &&
