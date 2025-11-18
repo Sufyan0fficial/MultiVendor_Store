@@ -35,6 +35,7 @@ import OrderDetail from './pages/UserSide/OrderDetail.jsx'
 import TrackOrder from './pages/UserSide/TrackOrder.jsx'
 import WithdrawMoney from './pages/SellerSide/WithdrawMoney.jsx'
 import InboxDemo from './pages/UserSide/InboxDemo.jsx'
+import ChatDialogDemo from './pages/UserSide/ChatDialogDemo.jsx'
 
 function App() {
   const dispatch = useDispatch()
@@ -62,6 +63,7 @@ function App() {
           <Route path='/orders/:id' element={<OrderDetail />} />
           <Route path='/track-order/:id' element={<TrackOrder />} />
           <Route path='/inbox' element={<InboxDemo />} />
+          {/* <Route path='/chat-demo' element={<ChatDialogDemo />} /> */}
 
 
           <Route element={<PrivateRoute />}>

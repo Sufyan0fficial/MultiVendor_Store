@@ -14,7 +14,7 @@ import { MdArrowOutward } from 'react-icons/md';
 import { FiHeart } from 'react-icons/fi';
 import { addProducttoCart, addProducttoWishlist, removeFromCart, removeFromWishlist } from '../../Redux/CartWishlistSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import {socket} from '../../../socketio'
+import ChatDialog from '../../components/ChatDialog';
 
 
 function ProductDetailsPage() {
@@ -28,7 +28,7 @@ function ProductDetailsPage() {
     console.log('product is', product)
     const [count, setCount] = useState(0)
     const [addtoWishlist, setAddtoWishlist] = useState(false)
-    console.log('wishlist status',addtoWishlist)
+    console.log('wishlist status', addtoWishlist)
     const [addtoCart, setAddtoCart] = useState(false)
     const [activeInfoSection, setActiveInfoSection] = useState(1)
     const [relatedProducts, setRelatedProducts] = useState([])
@@ -36,6 +36,7 @@ function ProductDetailsPage() {
     const [messageApi, contextHolder] = message.useMessage()
     const dispatch = useDispatch()
     const [productReviews, setProductReviews] = useState([])
+    const [chatDialogOpen, setChatDialogOpen] = useState(false)
 
 
     useEffect(() => {
@@ -69,14 +70,14 @@ function ProductDetailsPage() {
         }
 
         const productInWishlist = wishlistData?.find((item, i) => item?._id === product?._id)
-        console.log('product added to wishlist is',productInWishlist)
+        console.log('product added to wishlist is', productInWishlist)
         if (productInWishlist) {
             setAddtoWishlist(true)
         }
         else {
             setAddtoWishlist(false)
         }
-    }, [cartData, wishlistData,product])
+    }, [cartData, wishlistData, product])
 
 
     const handleRemoveProductFromCart = () => {
@@ -86,7 +87,7 @@ function ProductDetailsPage() {
     }
     const handleAddProducttoCart = () => {
         setAddtoCart(true)
-        dispatch(addProducttoCart({...product,qty:1}))
+        dispatch(addProducttoCart({ ...product, qty: 1 }))
         Message(messageApi, 'success', 'Product added to cart')
 
     }
@@ -104,12 +105,10 @@ function ProductDetailsPage() {
         Message(messageApi, 'warning', 'Product removed from wishlist')
     }
 
-    
-const handleChat = () => {
-  console.log("function is triggering");
 
-  socket.emit('send_message','hi')
-};
+    const handleChat = () => {
+        setChatDialogOpen(true);
+    };
 
 
     return (
@@ -410,6 +409,20 @@ const handleChat = () => {
                     </div>
 
                 </div>
+                {/* Chat Dialog */}
+                <ChatDialog
+                    isOpen={chatDialogOpen}
+                    onClose={() => setChatDialogOpen(false)}
+                    shopInfo={{
+                        name: product?.shop?.shop_name || 'Shop Name',
+                        image:product?.shop?.avatar                  
+                    }}
+                    productInfo={{
+                        name: product?.product_name,
+                        price: product?.discounted_price || product?.original_price,
+                        image: product?.images?.[0]
+                    }}
+                />
             </div>
 
 
@@ -418,6 +431,8 @@ const handleChat = () => {
             <div className='mt-24  mb-10 md:mt-10 text-center tracking-wide'>
                 Detail not found !
             </div>
+
+
 
 
 

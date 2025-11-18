@@ -10,13 +10,20 @@ import { message } from 'antd'
 import { Message } from '../../utils/notifymessage.js'
 import { fetchallProducts, Filters, Get_All_Events } from '../../api/routes.js'
 import DiscountedItems from '../../components/FeaturedSection.jsx'
+import { CustomerSocket } from '../../../customer.socketio.js'
+import { useSelector } from 'react-redux'
 
 function Home() {
   const [messageApi, contextHolder] =  message.useMessage()
   const [bestSellingProducts, setBestSellingProducts] = useState([])
   const [discountedProducts, setDiscountedProducts]  = useState([])
   const [event, setEvent] = useState([])
+  const {userData} = useSelector(state=>state?.UserReducer)
   console.log('event data is',event)
+
+  useEffect(()=>{
+    CustomerSocket.emit('updateOnlineStatus',{id:userData,online:true, user_type:'customer_id'})
+  },[])
 
   useEffect(()=>{
     const fetchProducts = async()=>{

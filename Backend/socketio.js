@@ -1,5 +1,6 @@
 // socketio.js
 const { Server } = require("socket.io");
+const { UserOnline } = require("./Controller/message.controller");
 
 let io;
 
@@ -13,8 +14,11 @@ function initSocket(server) {
 
   io.on("connection", (socket) => {
     console.log("current socket attached is", socket.id);
-    socket.on('send_message',(data)=>console.log(data))
-    socket.emit('reply','by')
+    socket.on('customer_online',UserOnline(data))
+    socket.on('send message',(data)=>{
+      socket.join(data?.vendor_id)
+      io.to(data.vendor_id).emit
+    })
   });
 
   return io;
