@@ -34,6 +34,7 @@ import OrderDetails from './pages/SellerSide/OrderDetails.jsx'
 import OrderDetail from './pages/UserSide/OrderDetail.jsx'
 import TrackOrder from './pages/UserSide/TrackOrder.jsx'
 import WithdrawMoney from './pages/SellerSide/WithdrawMoney.jsx'
+import Inbox from './pages/SellerSide/Inbox.jsx'
 import InboxDemo from './pages/UserSide/InboxDemo.jsx'
 import ChatDialogDemo from './pages/UserSide/ChatDialogDemo.jsx'
 
@@ -86,7 +87,7 @@ function App() {
           <Route  path='create-event' element={<CreateEvent />}/>
           <Route  path='events' element={<AllEvents />}/>
           <Route  path='withdraw-money' element={<WithdrawMoney />}/>
-          <Route  path='inbox'/>
+          <Route  path='inbox' element={<Inbox />}/>
           <Route  path='discount-codes' element={<CouponCodes />}/>
           <Route  path='refunds'/>
           <Route  path='settings'/>

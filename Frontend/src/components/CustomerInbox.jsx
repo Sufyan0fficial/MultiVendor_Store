@@ -3,9 +3,10 @@ import { IoSearchOutline, IoSendSharp } from 'react-icons/io5';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MdArrowBack } from 'react-icons/md';
 
-const CustomerInbox = () => {
+const CustomerInbox = ({handleSendMessage}) => {
   const [selectedChat, setSelectedChat] = useState(null);
   const [message, setMessage] = useState('');
+  console.log('message is',message)
 
   // Static chat data
   const chats = [
@@ -91,7 +92,7 @@ const CustomerInbox = () => {
   };
 
   return (
-    <div className="flex h-[600px] bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="flex h-[calc(100vh-80px)] bg-white rounded-lg shadow-lg overflow-hidden">
       {/* Chat List */}
       <div className={`${selectedChat ? 'hidden md:flex' : 'flex'} flex-col w-full md:w-1/3 border-r border-gray-200`}>
         {/* Header */}
