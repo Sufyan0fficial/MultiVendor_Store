@@ -13,11 +13,14 @@ function initSocket(server) {
   });
 
   io.on("connection", (socket) => {
-    console.log("current socket attached is", socket.id);
-    socket.on('customer_online',UserOnline(data))
-    socket.on('send message',(data)=>{
-      socket.join(data?.vendor_id)
-      io.to(data.vendor_id).emit
+    // socket.on('online',UserOnline(data))
+    socket.on('join-vendor-room',(data)=>{
+      socket.join(data?.id)
+      console.log('vendor has joined the room',data)
+    })
+    socket.on('customer message',(data)=>{
+      console.log('customer message',data)
+      io.to(data?.vendor_id).emit('receive message',data)
     })
   });
 

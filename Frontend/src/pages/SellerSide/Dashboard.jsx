@@ -13,6 +13,7 @@ import {
 import { Line, Bar, Doughnut } from 'react-chartjs-2'
 import { getVendorOrders, Get_Products, getProductReviews, getTotalShopReviews } from '../../api/routes'
 import { Message } from '../../utils/notifymessage'
+import { VendorSocket } from '../../../vendor.socketio'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -53,6 +54,15 @@ function Dashboard() {
     productViews: 0
   })
   const [reviews, setReviews] = useState([])
+
+  useEffect(()=>{
+    VendorSocket.emit('join-vendor-room',{id:sellerData?._id})
+  },[])
+
+  VendorSocket.on('receive message',(data)=>{
+    
+    console.log('customer message data is',data)
+  })
   
   
   const { sellerData } = useSelector(state => state.SellerReducer)

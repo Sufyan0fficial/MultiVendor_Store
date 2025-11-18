@@ -415,7 +415,8 @@ function ProductDetailsPage() {
                     onClose={() => setChatDialogOpen(false)}
                     shopInfo={{
                         name: product?.shop?.shop_name || 'Shop Name',
-                        image:product?.shop?.avatar                  
+                        image:product?.shop?.avatar,
+                         id:product?.shop?._id               
                     }}
                     productInfo={{
                         name: product?.product_name,

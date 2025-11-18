@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { IoClose, IoSendSharp } from 'react-icons/io5';
 import { BiMessageDetail } from 'react-icons/bi';
-import { useNavigate } from 'react-router';
-// import { socket } from '../../socketio';
+import { useNavigate } from 'react-router'; 
+import { CustomerSocket } from '../../customer.socketio';
+
 import { useSelector } from 'react-redux';
 const ChatDialog = ({ isOpen, onClose, shopInfo, productInfo }) => {
   console.log('shopinfo',shopInfo,'prodcut inof',productInfo)
   const [message, setMessage] = useState(`Hi! I'm interested in "${productInfo?.name}". Is it available?`);
   const userData = useSelector(state=>state?.UserReducer?.userData)
+ 
 
   const navigate = useNavigate();
   const [messages, setMessages] = useState([
@@ -24,7 +26,7 @@ const ChatDialog = ({ isOpen, onClose, shopInfo, productInfo }) => {
       };
       const MessageTobeStored = {
         customer_id: userData?._id,
-        vendor_id: productInfo?.shop?._id,
+        vendor_id: shopInfo?.id,
         timeStamp:{
           customer: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         },
@@ -42,10 +44,10 @@ const ChatDialog = ({ isOpen, onClose, shopInfo, productInfo }) => {
         }
 
       }
-      
+
       setMessages([...messages, newMessage]);
-      socket.emit('send message', newMessage)
       setMessage('');
+      CustomerSocket.emit('customer message', MessageTobeStored)
     }
   };
 
