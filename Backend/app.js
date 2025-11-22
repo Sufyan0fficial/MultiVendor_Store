@@ -10,6 +10,7 @@ const UserRouter = require('./Routes/user.routes.js')
 const PaymentRouter = require('./Routes/payment.routes.js')
 const OrderRouter = require('./Routes/order.routes.js')
 const ReviewRouter = require('./Routes/review.routes.js')
+const ChatRouter = require('./Routes/chat.routes.js')
 const cors = require('cors')
 const path = require('path')
 const cookieParser = require('cookie-parser')
@@ -44,6 +45,7 @@ app.use('/api/v1/user',UserRouter)
 app.use('/api/v1/payment',PaymentRouter)
 app.use('/api/v1/order',OrderRouter)
 app.use('/api/v1/review',ReviewRouter)
+app.use('/api/v1/chat',ChatRouter)
 
 
 

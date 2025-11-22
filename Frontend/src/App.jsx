@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import './App.css'
 import { setScreenWidth } from './Redux/UtilSlice'
@@ -37,14 +37,28 @@ import WithdrawMoney from './pages/SellerSide/WithdrawMoney.jsx'
 import Inbox from './pages/SellerSide/Inbox.jsx'
 import InboxDemo from './pages/UserSide/InboxDemo.jsx'
 import ChatDialogDemo from './pages/UserSide/ChatDialogDemo.jsx'
+import { Socket } from '../socketio.js'
 
 function App() {
+  const customer = useSelector(state=>state?.UserReducer?.userData)
+  const seller = useSelector(state=>state?.SellerReducer?.sellerData)
   const dispatch = useDispatch()
   useEffect(() => {
     const screenWidthSetter = () => dispatch(setScreenWidth(window.innerWidth))
     window.addEventListener('resize', screenWidthSetter)
     return () => window.removeEventListener('resize', screenWidthSetter)
   }, [])
+
+  useEffect(()=>{
+    if(customer?._id){
+      Socket.emit('join-customer-room',{id:customer?._id})
+    }
+  },[customer])
+  useEffect(()=>{
+    if(seller?._id){
+      Socket.emit('join-vendor-room',{id:seller?._id})
+    }
+  },[seller])
   return (
     <BrowserRouter>
       <Routes>

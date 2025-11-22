@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
 import { IoClose, IoSendSharp } from 'react-icons/io5';
 import { BiMessageDetail } from 'react-icons/bi';
-import { useNavigate } from 'react-router'; 
-import { CustomerSocket } from '../../customer.socketio';
-
+import { useNavigate } from 'react-router';
+import { Socket } from '../../socketio';
 import { useSelector } from 'react-redux';
 const ChatDialog = ({ isOpen, onClose, shopInfo, productInfo }) => {
-  console.log('shopinfo',shopInfo,'prodcut inof',productInfo)
+  console.log('shopinfo', shopInfo, 'prodcut inof', productInfo)
   const [message, setMessage] = useState(`Hi! I'm interested in "${productInfo?.name}". Is it available?`);
-  const userData = useSelector(state=>state?.UserReducer?.userData)
- 
+  const userData = useSelector(state => state?.UserReducer?.userData)
+
 
   const navigate = useNavigate();
   const [messages, setMessages] = useState([
-    
+
   ]);
 
   const handleSendMessage = () => {
@@ -27,27 +26,20 @@ const ChatDialog = ({ isOpen, onClose, shopInfo, productInfo }) => {
       const MessageTobeStored = {
         customer_id: userData?._id,
         vendor_id: shopInfo?.id,
-        timeStamp:{
-          customer: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        onlineStatus: true,
+        lastMessage: message,
+        message: {
+          text: message,
+          sender: 'customer',
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         },
-        onlineStatus:{
-          customer:true
-        },
-        lastMessage:{
-          customer:message
-        },
-        messages:{
-          customer:{
-            productInfo,
-            message
-          }
-        }
+        profileData: userData
 
       }
 
       setMessages([...messages, newMessage]);
       setMessage('');
-      CustomerSocket.emit('customer message', MessageTobeStored)
+      Socket.emit('customer message', MessageTobeStored)
     }
   };
 
@@ -70,7 +62,7 @@ const ChatDialog = ({ isOpen, onClose, shopInfo, productInfo }) => {
         {/* Header */}
         <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-gray-50 rounded-t-lg">
           <div className="flex items-center space-x-3">
-              
+
             <img src={`${import.meta.env.VITE_API_DEV}/uploads/${shopInfo?.image}`} className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold" alt="shop_img" />
             <div>
               <h3 className="font-medium text-gray-900">{shopInfo?.name || 'Shop Name'}</h3>
@@ -110,16 +102,14 @@ const ChatDialog = ({ isOpen, onClose, shopInfo, productInfo }) => {
               className={`flex ${msg.sender === 'customer' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-xs px-3 py-2 rounded-lg ${
-                  msg.sender === 'customer'
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gray-200 text-gray-800'
-                }`}
+                className={`max-w-xs px-3 py-2 rounded-lg ${msg.sender === 'customer'
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-200 text-gray-800'
+                  }`}
               >
                 <p className="text-sm">{msg.text}</p>
-                <p className={`text-xs mt-1 ${
-                  msg.sender === 'customer' ? 'text-blue-100' : 'text-gray-500'
-                }`}>
+                <p className={`text-xs mt-1 ${msg.sender === 'customer' ? 'text-blue-100' : 'text-gray-500'
+                  }`}>
                   {msg.timestamp}
                 </p>
               </div>

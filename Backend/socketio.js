@@ -1,6 +1,6 @@
 // socketio.js
 const { Server } = require("socket.io");
-const { UserOnline } = require("./Controller/message.controller");
+const { UserOnline, customerMessage } = require("./Controller/message.controller");
 
 let io;
 
@@ -19,8 +19,19 @@ function initSocket(server) {
       console.log('vendor has joined the room',data)
     })
     socket.on('customer message',(data)=>{
-      console.log('customer message',data)
-      io.to(data?.vendor_id).emit('receive message',data)
+      console.log('customer message data',data)
+        customerMessage(data)
+        console.log('data to emit is',data?.vendor_id)
+      io.to(data?.vendor_id).emit('message',data)
+    })
+    socket.on('join-customer-room',(data)=>{
+      socket.join(data?.id)
+      console.log('customer has joined the room',data)
+    })
+    socket.on('vendor message',(data)=>{
+      console.log('vendor message',data)
+        customerMessage(data)
+      io.to(data?.customer_id).emit('message',data)
     })
   });
 

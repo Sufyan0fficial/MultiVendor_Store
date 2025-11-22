@@ -1,5 +1,6 @@
 import React from 'react';
-import CustomerInbox from '../../components/CustomerInbox';
+import CustomerInbox from '../../components/Inbox';
+import Inbox from '../../components/Inbox';
 
 const InboxDemo = () => {
   return (
@@ -9,7 +10,7 @@ const InboxDemo = () => {
           Customer Inbox
         </h1>
         <div className="bg-white rounded-lg shadow-lg p-6">
-          <CustomerInbox />
+          <Inbox />
         </div>
       </div>
     </div>

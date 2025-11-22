@@ -205,3 +205,14 @@ export const getWithdrawalHistory = async() => {
 export const getFinancialStats = async() => {
   return axiosInstance.get(`/seller/auth/financial-stats`)
 }
+
+
+
+//Messaging
+
+export const FetchCustomerChat = async(id)=>{
+  return axiosInstance.get(`/chat/get-customer-chat/${id}`)
+}
+export const FetchVendorChat = async(id)=>{
+  return axiosInstance.get(`/chat/get-vendor-chat/${id}`)
+}

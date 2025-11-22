@@ -13,12 +13,12 @@ import { message, Tooltip } from 'antd';
 import { MdInfoOutline, MdOutlineArrowOutward, MdOutlineTrackChanges } from 'react-icons/md';
 import { useNavigate } from 'react-router';
 
-function ProfilePageWrapper({activeMenu, setActiveMenu}) {
+function ProfilePageWrapper({ activeMenu, setActiveMenu }) {
     const [customerOrders, setCustomerOrders] = useState([])
-    const {userData} = useSelector(state=>state?.UserReducer)
+    const { userData } = useSelector(state => state?.UserReducer)
     const [messageApi, contextHolder] = message.useMessage()
     const navigate = useNavigate()
-    
+
     const headers = [
         { key: "_id", name: "Order ID" },
         { key: "total_price", name: "Total Price" },
@@ -28,22 +28,22 @@ function ProfilePageWrapper({activeMenu, setActiveMenu}) {
         { key: "track_order", name: "Track Order" },
     ];
 
-    useEffect(()=>{
-        const handleGetCustomerOrders = async()=>{
+    useEffect(() => {
+        const handleGetCustomerOrders = async () => {
             try {
                 const res = await getCustomerOrders(userData?._id)
-                if(res.status === 200){
-                    const data = res.data?.data && res.data?.data?.map((item,i)=>{
-                        return(
+                if (res.status === 200) {
+                    const data = res.data?.data && res.data?.data?.map((item, i) => {
+                        return (
                             {
-                                ...item,view_detail : <MdOutlineArrowOutward onClick={()=>navigate(`/orders/${item?._id}`)} className='cursor-pointer'/>,
-                                track_order: item?.order_status === 'Cancelled' ? 
-                                <Tooltip placement='top' title='Order has been cancelled' className='cursor-pointer'>
-                                <MdInfoOutline size={22} />
-                                </Tooltip>
-                                :
+                                ...item, view_detail: <MdOutlineArrowOutward onClick={() => navigate(`/orders/${item?._id}`)} className='cursor-pointer' />,
+                                track_order: item?.order_status === 'Cancelled' ?
+                                    <Tooltip placement='top' title='Order has been cancelled' className='cursor-pointer'>
+                                        <MdInfoOutline size={22} />
+                                    </Tooltip>
+                                    :
 
-                                <MdOutlineTrackChanges onClick={()=>navigate(`/track-order/${item?._id}`,{state:{status:item?.order_status}})} size={22} className='cursor-pointer'/>
+                                    <MdOutlineTrackChanges onClick={() => navigate(`/track-order/${item?._id}`, { state: { status: item?.order_status } })} size={22} className='cursor-pointer' />
 
                             }
                         )
@@ -51,11 +51,11 @@ function ProfilePageWrapper({activeMenu, setActiveMenu}) {
                     setCustomerOrders(data)
                 }
             } catch (error) {
-                Message(messageApi,'error','Failed to get Orders data')
+                Message(messageApi, 'error', 'Failed to get Orders data')
             }
         }
         handleGetCustomerOrders()
-    },[])
+    }, [])
 
 
     const orders = [
@@ -70,38 +70,39 @@ function ProfilePageWrapper({activeMenu, setActiveMenu}) {
         { _id: "ORD-1009", status: "Completed", Qty: 6, total: 2450 },
         { _id: "ORD-1010", status: "Delivering", Qty: 3, total: 2450 },
     ];
-  return (
-    <div className='max-h-[calc(100vh-60px)] md:max-h-[calc(100vh-200px)] border border-gray-200 px-3 md:px-6 rounded-xl overflow-x-auto overflow-y-auto w-full'>
-        {
-            contextHolder
-        }
-        {
-            activeMenu === 1 &&
-        <ProfileUpdate />
-        }
-        {
-            activeMenu === 2 &&
-        <ProfileTable headers={headers} data={customerOrders} className={'min-w-[1200px]'}/>
-        }
-        {
-            activeMenu === 3 &&
-        <ProfileTable headers={headers} data={orders} className={'min-w-[800px]'}/>
-        }
-        {
-            activeMenu === 4 &&
-        <CustomerInbox />
-        }
-        {
-            activeMenu === 6 &&
-        <Logout setActiveMenu={setActiveMenu}/>
-        }
-        {
-            activeMenu === 5 &&
-        <Addresses />
-        }
-        
-    </div>
-  )
+    return (
+        <div className='max-h-[calc(100vh-60px)] md:max-h-[calc(100vh-200px)] border border-gray-200 px-3 md:px-6 rounded-xl overflow-x-auto overflow-y-auto w-full'>
+            {
+                contextHolder
+            }
+            {
+                activeMenu === 1 &&
+                <ProfileUpdate />
+            }
+            {
+                activeMenu === 2 &&
+                <ProfileTable headers={headers} data={customerOrders} className={'min-w-[1200px]'} />
+            }
+            {
+                activeMenu === 3 &&
+                <ProfileTable headers={headers} data={orders} className={'min-w-[800px]'} />
+            }
+            {
+                activeMenu === 4 &&
+
+                <CustomerInbox />
+            }
+            {
+                activeMenu === 6 &&
+                <Logout setActiveMenu={setActiveMenu} />
+            }
+            {
+                activeMenu === 5 &&
+                <Addresses />
+            }
+
+        </div>
+    )
 }
 
 export default ProfilePageWrapper
