@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import SellerHeader from '../../components/Seller/header'
+import SellerHeader from '../../components/Seller/Header'
 import { Select, Button, message } from 'antd'
 import { IoArrowBack } from 'react-icons/io5'
 import { useNavigate, useParams, useSearchParams } from 'react-router'
