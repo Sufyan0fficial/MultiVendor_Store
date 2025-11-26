@@ -1,6 +1,6 @@
 import React from 'react'
 import { Outlet } from 'react-router'
-import SellerHeader from './header'
+import SellerHeader from './Header'
 import { useSelector } from 'react-redux'
 import SellerDashboardSidebar from './SellerDashboardSidebar'
 
