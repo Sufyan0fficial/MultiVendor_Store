@@ -7,7 +7,7 @@ let io;
 function initSocket(server) {
   io = new Server(server, {
     cors: {
-      origin: "http://192.168.100.5:5173/",
+      origin: "https://multivendor-store-si0j.onrender.com/",
       credentials: true,
     },
   });
