@@ -33,6 +33,7 @@ app.use(cors({
     credentials:true
 }))
 app.use(express.json())
+app.use(express.static(path.join(__dirname,'../Frontend/dist')))
 
 
 app.use('/uploads',express.static(path.join(__dirname,'../Uploads')))
@@ -55,7 +56,7 @@ app.use((req, res) => {
   }
   
   // For all non-API routes, serve the React app
-  res.sendFile(path.join(__dirname, 'Frontend', 'dist', 'index.html'));
+  res.sendFile(path.join(__dirname, '../Frontend/dist/index.html'));
 });
 
 app.use(ErrorHandler)
