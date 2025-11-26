@@ -73,7 +73,7 @@ function FAQ() {
             <div className='max-w-7xl w-full'>
             <div className='mx-auto px-6 md:px-10 '>
             <div className='text-2xl md:text-3xl font-bold text-black mb-6'>FAQ</div>
-            <Collapse items={FAQList} defaultActiveKey={[1]} accordion={true} className='[&._ant-collapse-header]:bg-white'/>
+            <Collapse items={FAQList} defaultActiveKey={[1]} accordion={true} className=''/>
             </div>
             </div>
         </div>

@@ -46,6 +46,19 @@ app.use('/api/v1/payment',PaymentRouter)
 app.use('/api/v1/order',OrderRouter)
 app.use('/api/v1/review',ReviewRouter)
 app.use('/api/v1/chat',ChatRouter)
+app.use((req, res) => {
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ 
+      success: false,
+      message: 'API endpoint not found' 
+    });
+  }
+  
+  // For all non-API routes, serve the React app
+  res.sendFile(path.join(__dirname, 'Client', 'dist', 'index.html'));
+});
+
+app.use(ErrorHandler)
 
 
 
