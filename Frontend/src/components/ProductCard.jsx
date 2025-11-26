@@ -8,6 +8,7 @@ import { message } from 'antd'
 import { addProducttoCart, addProducttoWishlist, removeFromCart, removeFromWishlist } from '../Redux/CartWishlistSlice.js'
 
 const ProductCard = ({ product, shop, isVendor }) => {
+  console.log('shop data in product card is', shop)
   const navigate = useNavigate()
   const [addtoWishlist, setAddtoWishlist] = useState(false)
   const [addtoCart, setAddtoCart] = useState(false)

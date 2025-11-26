@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { BrowserRouter, Route, Routes } from 'react-router'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
 import './App.css'
 import { setScreenWidth } from './Redux/UtilSlice'
 import Layout from './components/Layout.jsx'
@@ -38,6 +38,7 @@ import Inbox from './pages/SellerSide/Inbox.jsx'
 import InboxDemo from './pages/UserSide/InboxDemo.jsx'
 import ChatDialogDemo from './pages/UserSide/ChatDialogDemo.jsx'
 import { Socket } from '../socketio.js'
+import NotFound from './components/NotFound.jsx'
 
 function App() {
   const customer = useSelector(state=>state?.UserReducer?.userData)
@@ -110,6 +111,8 @@ function App() {
         </Route>
         <Route path='/shop/:id' element={<ShopProfile />}/>
         <Route  path='/shop/orders/:id' element={<OrderDetails />}/>
+        <Route path="/404" element={<NotFound />}/>
+        <Route path="*" element={<Navigate replace to="/404" />} />
 
       </Routes>
     </BrowserRouter>

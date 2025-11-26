@@ -27,6 +27,7 @@ function BestDeals({ data }) {
                 <div className='grid grid-cols-1 [400px]:grid-cols-4  md:grid-cols-3 lg:grid-cols-4 gap-6 grid-flow-row-dense items-stretch h-full'>
                     {
                         productData?.length > 0 && productData?.map((item, index) => {
+                            console.log('item being mapped is',item)
                             return (
                                 <div key={index} className='min-h-full'>
 

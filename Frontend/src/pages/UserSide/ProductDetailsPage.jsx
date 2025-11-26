@@ -237,9 +237,9 @@ function ProductDetailsPage() {
                                                 {product?.shop?.shop_name}
 
                                             </div>
-                                            <div className='text-xs'>
+                                            {/* <div className='text-xs'>
                                                 ({product?.shop?.rating}) Ratings
-                                            </div>
+                                            </div> */}
                                         </div>
 
 

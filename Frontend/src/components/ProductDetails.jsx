@@ -20,6 +20,7 @@ function ProductDetails({ product, shop, viewDetails, setViewDetails }) {
     const [addtoWishlist, setAddtoWishlist] = useState(false)
     const [addtoCart, setAddtoCart] = useState(false)
     const discountedPrice = product?.discounted_price === 0 ? false : true
+    console.log('is Discounted Price',discountedPrice,'product discounted price',product?.discounted_price)
     const dispatch = useDispatch()
     const { cartData } = useSelector(state => state?.CartWishlistReducer)
     const { wishlistData } = useSelector(state => state?.CartWishlistReducer)
@@ -87,7 +88,7 @@ function ProductDetails({ product, shop, viewDetails, setViewDetails }) {
                                 <img src={`${import.meta.env.VITE_API_DEV}/uploads/${shop?.avatar}`} alt="shop_img" className='-mt-[2px] w-[50px] h-[50px] border border-gray-200 rounded-full object-center object-cover' />
                                 <div onClick={() => {
 
-                                    navigate(`/shop/${shop._id}`)
+                                    navigate(`/shop/${shop?._id}`)
 
                                 }
 
@@ -144,7 +145,7 @@ function ProductDetails({ product, shop, viewDetails, setViewDetails }) {
                                     discountedPrice &&
 
                                     <div>
-                                        {product?.discount_price}$
+                                        {product?.discounted_price}$
                                     </div>
                                 }
                                 <div className={`${discountedPrice ? 'text-red-500 line-through' : 'text-black'}`}>
