@@ -3,12 +3,15 @@ import { productData } from '../../static/data'
 import ProductCard from '../../components/ProductCard'
 import { useSearchParams } from 'react-router'
 import { Filters } from '../../api/routes'
+import Lottie from 'lottie-react'
+import animationData from '../../assets/Animations/ShopingCart.json'
 
 function BestSelling() {
     const [products, setProducts] = useState([])
-
+    const [loading, setLoading] = useState(false)
      useEffect(()=>{
        const fetchProducts = async()=>{
+        setLoading(true)
          const bestSellingQuery =  'best_selling=true'
          try {
            const bestSelling = await Filters(bestSellingQuery)
@@ -19,10 +22,24 @@ function BestSelling() {
          } catch (error) {
            Message(messageApi,'error','Failed to get Products')
          }
+         finally{
+            setLoading(false)
+         }
        }
        fetchProducts()
      },[])
     return (
+        
+
+      
+        loading ?
+         <div className='min-h-[calc(100vh-200px)] flex justify-center items-center w-full'>
+
+          <div style={{ width: 300, height: 300 }}>
+            <Lottie animationData={animationData} loop={true} />
+          </div>
+        </div>
+        :
         <div className='flex  items-center justify-center  py-20 bg-[#f6f6f5]'>
 
             <div className='w-full md:max-w-7xl px-4 md:px-10 mx-auto'>
@@ -47,6 +64,7 @@ function BestSelling() {
                 }
             </div>
         </div>
+          
     )
 }
 

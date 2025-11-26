@@ -12,12 +12,15 @@ import { Message } from '../utils/notifymessage.js';
 import { message, Tooltip } from 'antd';
 import { MdInfoOutline, MdOutlineArrowOutward, MdOutlineTrackChanges } from 'react-icons/md';
 import { useNavigate } from 'react-router';
+import Lottie from 'lottie-react';
+import animationData from '../assets/Animations/ShopingCart.json'
 
 function ProfilePageWrapper({ activeMenu, setActiveMenu }) {
     const [customerOrders, setCustomerOrders] = useState([])
     const { userData } = useSelector(state => state?.UserReducer)
     const [messageApi, contextHolder] = message.useMessage()
     const navigate = useNavigate()
+    const [loading, setLoading] = useState(false)
 
     const headers = [
         { key: "_id", name: "Order ID" },
@@ -30,6 +33,7 @@ function ProfilePageWrapper({ activeMenu, setActiveMenu }) {
 
     useEffect(() => {
         const handleGetCustomerOrders = async () => {
+            setLoading(true)
             try {
                 const res = await getCustomerOrders(userData?._id)
                 if (res.status === 200) {
@@ -53,6 +57,9 @@ function ProfilePageWrapper({ activeMenu, setActiveMenu }) {
             } catch (error) {
                 Message(messageApi, 'error', 'Failed to get Orders data')
             }
+            finally{
+                setLoading(false)
+            }
         }
         handleGetCustomerOrders()
     }, [])
@@ -71,6 +78,14 @@ function ProfilePageWrapper({ activeMenu, setActiveMenu }) {
         { _id: "ORD-1010", status: "Delivering", Qty: 3, total: 2450 },
     ];
     return (
+        loading ?
+         <div className='min-h-[calc(100vh-200px)] flex justify-center items-center w-full'>
+
+          <div style={{ width: 300, height: 300 }}>
+            <Lottie animationData={animationData} loop={true} />
+          </div>
+        </div>
+        :
         <div className='max-h-[calc(100vh-60px)] md:max-h-[calc(100vh-200px)] border border-gray-200 px-3 md:px-6 rounded-xl overflow-x-auto overflow-y-auto w-full'>
             {
                 contextHolder

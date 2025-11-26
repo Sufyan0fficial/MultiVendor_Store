@@ -13,7 +13,7 @@ function ProfileTable({ headers, data, className, type, messageApi, setData, han
                     {headers.map((header, index) => (
                         <div
                             key={index}
-                            className={`min-w-[200px] max-w-[200px] overflow-hidden whitespace-nowrap text-ellipsis border-r pl-2 border-gray-300 ${index === headers.length - 1 ? "border-r-0" : ""
+                            className={`min-w-[200px] max-w-[200px] overflow-hidden whitespace-nowrap text-ellipsis border-r pl-2 border-gray-300 flex justify-center items-center ${index === headers.length - 1 ? "border-r-0" : ""
                                 }`}
                         >
                             {header.name}
@@ -30,12 +30,12 @@ function ProfileTable({ headers, data, className, type, messageApi, setData, han
                         {headers.map((header, j) => (
                             <div
                                 key={j}
-                                className={`min-w-[200px] max-w-[200px] overflow-hidden whitespace-nowrap text-ellipsis pl-2  text-gray-700 text-sm
+                                className={`!min-w-[200px] max-w-[200px] overflow-hidden whitespace-nowrap text-ellipsis pl-2  text-gray-700 text-sm flex justify-center items-center 
                                 }`}
                                 // onClick={() => handleDelete(order)}
                             >
                                 {
-                                    header.key === 'total' ? ('$' + order[header.key]) : order[header.key]
+                                    header.key === 'total_price' ? ('$' + order[header.key]) : order[header.key]
                                 }
 
 

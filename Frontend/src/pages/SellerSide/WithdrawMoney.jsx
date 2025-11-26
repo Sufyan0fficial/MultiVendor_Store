@@ -29,6 +29,8 @@ import {
   HistoryOutlined
 } from '@ant-design/icons'
 import { getVendorOrders, requestWithdrawal, getWithdrawalHistory, getFinancialStats } from '../../api/routes'
+import Lottie from 'lottie-react'
+import animationData from '../../assets/Animations/ShopingCart.json'
 
 const { Title, Text } = Typography
 const { Option } = Select
@@ -221,9 +223,12 @@ function WithdrawMoney() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Spin size="large" />
-      </div>
+       <div className='min-h-[calc(100vh-200px)] flex justify-center items-center w-full'>
+
+          <div style={{ width: 300, height: 300 }}>
+            <Lottie animationData={animationData} loop={true} />
+          </div>
+        </div>
     )
   }
 

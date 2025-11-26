@@ -25,6 +25,7 @@ import {
   Legend,
   ArcElement,
 } from 'chart.js'
+import Lottie from 'lottie-react'
 
 ChartJS.register(
   CategoryScale,
@@ -37,6 +38,8 @@ ChartJS.register(
   Legend,
   ArcElement
 )
+import animationData from '../../assets/Animations/ShopingCart.json'
+import { useNavigate } from 'react-router'
 
 const { RangePicker } = DatePicker
 const { Option } = Select
@@ -52,6 +55,7 @@ function Dashboard() {
     totalCustomers: 0,
     productViews: 0
   })
+  const navigate = useNavigate()
   const [reviews, setReviews] = useState([])
 
     const { sellerData } = useSelector(state => state.SellerReducer)
@@ -277,9 +281,12 @@ function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Spin size="large" />
-      </div>
+      <div className='min-h-[calc(100vh-200px)] flex justify-center items-center w-full'>
+
+          <div style={{ width: 300, height: 300 }}>
+            <Lottie animationData={animationData} loop={true} />
+          </div>
+        </div>
     )
   }
 
@@ -395,6 +402,7 @@ function Dashboard() {
           <Card 
             title="Recent Orders" 
             extra={<Button type="link">View All</Button>}
+            onClick={()=>navigate('/dashboard/orders')}
           >
             <Table
               columns={orderColumns}

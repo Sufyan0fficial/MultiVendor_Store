@@ -5,7 +5,7 @@ import { MdArrowBack } from 'react-icons/md';
 import { useRef } from 'react';
 import { useEffect } from 'react';
 
-const Inbox = ({ chats, userType, handleSendMessage, selectedChat, setSelectedChat, message, setMessage }) => {
+const Inbox = ({ chats, userType, handleSendMessage, selectedChat, setSelectedChat, message, setMessage, messages }) => {
   const ScrollRef = useRef(null)
   console.log('child message is', message)
 
@@ -19,68 +19,6 @@ const Inbox = ({ chats, userType, handleSendMessage, selectedChat, setSelectedCh
     smoothScroll()
   }, [selectedChat?.messages])
 
-
-  // Static chat data
-  // const chats = [
-  //   {
-  //     id: 1,
-  //     shopName: 'TechStore Pro',
-  //     shopAvatar: 'https://via.placeholder.com/40/4F46E5/FFFFFF?text=TS',
-  //     lastMessage: 'Your order has been shipped!',
-  //     timestamp: '2:30 PM',
-  //     unreadCount: 2,
-  //     isOnline: true,
-  //     messages: [
-  //       { id: 1, text: 'Hello! I have a question about my order', sender: 'customer', timestamp: '2:25 PM' },
-  //       { id: 2, text: 'Hi! I\'d be happy to help. What\'s your order number?', sender: 'shop', timestamp: '2:26 PM' },
-  //       { id: 3, text: 'It\'s #12345', sender: 'customer', timestamp: '2:27 PM' },
-  //       { id: 4, text: 'Perfect! I can see your order here. Your order has been shipped!', sender: 'shop', timestamp: '2:30 PM' }
-  //     ]
-  //   },
-  //   {
-  //     id: 2,
-  //     shopName: 'Fashion Hub',
-  //     shopAvatar: 'https://via.placeholder.com/40/EC4899/FFFFFF?text=FH',
-  //     lastMessage: 'Thank you for your purchase!',
-  //     timestamp: '1:15 PM',
-  //     unreadCount: 0,
-  //     isOnline: false,
-  //     messages: [
-  //       { id: 1, text: 'Is this dress available in size M?', sender: 'customer', timestamp: '1:10 PM' },
-  //       { id: 2, text: 'Yes, we have it in stock!', sender: 'shop', timestamp: '1:12 PM' },
-  //       { id: 3, text: 'Great! I\'ll order it now', sender: 'customer', timestamp: '1:13 PM' },
-  //       { id: 4, text: 'Thank you for your purchase!', sender: 'shop', timestamp: '1:15 PM' }
-  //     ]
-  //   },
-  //   {
-  //     id: 3,
-  //     shopName: 'Home Essentials',
-  //     shopAvatar: 'https://via.placeholder.com/40/10B981/FFFFFF?text=HE',
-  //     lastMessage: 'We have a new collection!',
-  //     timestamp: 'Yesterday',
-  //     unreadCount: 1,
-  //     isOnline: true,
-  //     messages: [
-  //       { id: 1, text: 'Hi! We have a new collection of home decor items', sender: 'shop', timestamp: 'Yesterday' },
-  //       { id: 2, text: 'Would you like to check it out?', sender: 'shop', timestamp: 'Yesterday' }
-  //     ]
-  //   },
-  //   {
-  //     id: 4,
-  //     shopName: 'Sports World',
-  //     shopAvatar: 'https://via.placeholder.com/40/F59E0B/FFFFFF?text=SW',
-  //     lastMessage: 'Your return has been processed',
-  //     timestamp: 'Monday',
-  //     unreadCount: 0,
-  //     isOnline: false,
-  //     messages: [
-  //       { id: 1, text: 'I need to return this item', sender: 'customer', timestamp: 'Monday' },
-  //       { id: 2, text: 'Sure! Please provide the reason for return', sender: 'shop', timestamp: 'Monday' },
-  //       { id: 3, text: 'Wrong size delivered', sender: 'customer', timestamp: 'Monday' },
-  //       { id: 4, text: 'Your return has been processed', sender: 'shop', timestamp: 'Monday' }
-  //     ]
-  //   }
-  // ];
 
 
 
@@ -149,7 +87,7 @@ const Inbox = ({ chats, userType, handleSendMessage, selectedChat, setSelectedCh
 
       {/* Chat Window */}
       <div className={`${selectedChat ? 'flex' : 'hidden md:flex'} flex-col flex-1`}>
-        {selectedChat ? (
+        {selectedChat?.id ? (
           <>
             {/* Chat Header */}
             <div className="p-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
@@ -179,12 +117,12 @@ const Inbox = ({ chats, userType, handleSendMessage, selectedChat, setSelectedCh
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {
+              {/* {
                 userType === 'customer' &&
 
                 <div ref={ScrollRef}></div>
-              }
-              {selectedChat?.messages?.map((msg, index) => (
+              } */}
+              {messages?.length > 0 && messages?.map((msg, index) => (
                 <div
                   key={index}
                   className={`flex ${userType === 'customer' ? (msg?.sender === 'customer' ? 'justify-end' : 'justify-start') : (msg?.sender === 'customer' ? 'justify-start' : 'justify-end')}`}

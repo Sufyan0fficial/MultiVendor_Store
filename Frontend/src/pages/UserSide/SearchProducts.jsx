@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router'
 import { Filters } from '../../api/routes'
 import { Message } from '../../utils/notifymessage'
 import ProductCard from '../../components/ProductCard'
+import Lottie from 'lottie-react'
+import animationData from '../../assets/Animations/ShopingCart.json'
 
 function SearchProducts() {
     const [filters, setFilters] = useState({
@@ -22,6 +24,7 @@ function SearchProducts() {
     const [productsData, setProductsData] = useState([])
 
     useEffect(() => {
+        setLoading(true)
         const queryParams = new URLSearchParams(window.location.search)
         const searchTerm = queryParams.get('searchTerm') || ''
         const order = queryParams.get('order') || 'desc'
@@ -103,53 +106,61 @@ function SearchProducts() {
         navigate(`/search?${queryString}`)
     }
     return (
-        <div className='w-full mb-20'>
-            <div className='max-w-7xl w-full px-6 md:px-10 mx-auto'>
-                <div className='w-full flex justify-end gap-x-6 gap-y-6 flex-col md:flex-row mt-20 md:mt-10 mb-10'>
-                    <div className='flex gap-4 items-center'>
-                        <div>
-                            Sort by:
-                        </div>
+        loading ?
+            <div className='min-h-[calc(100vh-200px)] flex justify-center items-center w-full'>
 
-                        <select onChange={handleSorting} className='border focus:outline-0 rounded-md px-4 md:px-6 py-2 font-semibold cursor-pointer' value={sortingOption}>
-                            <option value='latest'>Latest</option>
-                            <option value='oldest'>Oldest</option>
-                            <option value='high_to_low'>Price high to low</option>
-                            <option value='low_to_high'>Price low to high</option>
-                        </select>
-                    </div>
-                    <div className='flex gap-4 items-center'>
-                        <div>
-                            Discount:
-                        </div>
-                        <Checkbox checked={discount} style={{ transform: 'scale(1.5)' }} onChange={handleDiscount} />
-                    </div>
-
+                <div style={{ width: 300, height: 300 }}>
+                    <Lottie animationData={animationData} loop={true} />
                 </div>
-                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
+            </div>
+            :
+            <div className='w-full mb-20'>
+                <div className='max-w-7xl w-full px-6 md:px-10 mx-auto'>
+                    <div className='w-full flex justify-end gap-x-6 gap-y-6 flex-col md:flex-row mt-20 md:mt-10 mb-10'>
+                        <div className='flex gap-4 items-center'>
+                            <div>
+                                Sort by:
+                            </div>
+
+                            <select onChange={handleSorting} className='border focus:outline-0 rounded-md px-4 md:px-6 py-2 font-semibold cursor-pointer' value={sortingOption}>
+                                <option value='latest'>Latest</option>
+                                <option value='oldest'>Oldest</option>
+                                <option value='high_to_low'>Price high to low</option>
+                                <option value='low_to_high'>Price low to high</option>
+                            </select>
+                        </div>
+                        <div className='flex gap-4 items-center'>
+                            <div>
+                                Discount:
+                            </div>
+                            <Checkbox checked={discount} style={{ transform: 'scale(1.5)' }} onChange={handleDiscount} />
+                        </div>
+
+                    </div>
+                    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
+                        {
+                            productsData?.length > 0 &&
+                            productsData?.map((item, index) => {
+                                return (
+                                    <div key={index}>
+                                        <ProductCard product={item} shop={item?.shop} />
+                                    </div>
+                                )
+                            })
+
+
+
+                        }
+                    </div>
                     {
-                        productsData?.length > 0 &&
-                        productsData?.map((item, index) => {
-                            return (
-                                <div key={index}>
-                                    <ProductCard product={item} shop={item?.shop} />
-                                </div>
-                            )
-                        })
+                        productsData?.length === 0 &&
 
-
-
+                        <div className='text-center flex justify-center mt-10 text-gray-500'>
+                            No Products Found
+                        </div>
                     }
                 </div>
-                {
-                    productsData?.length === 0 &&
-
-                    <div className='text-center flex justify-center mt-10 text-gray-500'>
-                        No Products Found
-                    </div>
-                }
             </div>
-        </div>
     )
 }
 

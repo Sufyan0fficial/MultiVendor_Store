@@ -216,3 +216,6 @@ export const FetchCustomerChat = async(id)=>{
 export const FetchVendorChat = async(id)=>{
   return axiosInstance.get(`/chat/get-vendor-chat/${id}`)
 }
+export const FetchUserChat = async(id)=>{
+  return axiosInstance.get(`/chat/get-user-chat/${id}`)
+}

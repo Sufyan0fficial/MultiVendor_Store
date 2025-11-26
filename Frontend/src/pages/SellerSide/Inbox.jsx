@@ -4,8 +4,7 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { message } from 'antd'
-import { Message } from '../../utils/notifymessage'
-import { FetchVendorChat } from '../../api/routes'
+import { FetchUserChat, FetchVendorChat } from '../../api/routes'
 import { Socket } from '../../../socketio'
 function VendorInbox() {
     const [chat, setChat] = useState([])
@@ -13,18 +12,37 @@ function VendorInbox() {
     const [selectedChat, setSelectedChat] = useState({});
     const [messageApi, contextHolder] = message.useMessage()
     const [Message, setMessage] = useState('')
-    console.log('message is', Message)
+    const [messages, setMessages] = useState([])
+    console.log('messages are', messages)
     console.log('selectedMessage is', selectedChat)
     useEffect(() => {
         const handleMessageEvent = (data) => {
-            // if(Object.keys(selectedChat)?.length > 0){
-                 setSelectedChat(pre => ({...pre,messages : [...pre?.messages, data?.message] }))
-            // }
-            // else return
+            console.log('is data triggering',data)
+            setMessages(pre => ([...pre, data?.message]))
         }
-        Socket.on('message',handleMessageEvent)
-        return ()=>Socket.off('message',handleMessageEvent)
+
+            Socket.on('message-t-vendor', handleMessageEvent)
+        return () => Socket.off('message-t-vendor', handleMessageEvent)
     }, [])
+    useEffect(() => {
+        const fetchParticularChat = async () => {
+            try {
+                const res = await FetchUserChat(selectedChat?.id)
+                if (res.status === 200) {
+                    setMessages(res.data?.data)
+                }
+            } catch (error) {
+                messageApi.open({
+                    type: 'error',
+                    content: 'Failed to Fetch Customer Chat'
+                })
+            }
+
+        }
+        if (selectedChat?.id) {
+            fetchParticularChat()
+        }
+    }, [selectedChat?.id])
     useEffect(() => {
         const fetchChat = async () => {
             try {
@@ -51,7 +69,10 @@ function VendorInbox() {
                 setChat(formattedData)
 
             } catch (error) {
-                Message(messageApi, 'error', 'Failed to fetch Customer chat')
+                messageApi.open({
+                    type: 'error',
+                    content: 'Failed to Fetch Chats'
+                })
             }
         }
         fetchChat()
@@ -66,7 +87,8 @@ function VendorInbox() {
                 sender: 'vendor',
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
-            setSelectedChat(pre => ({ ...pre, messages: [...pre.messages, newMessage] }))
+            setMessages(pre => ([...pre, newMessage]))
+
             Socket.emit('vendor message', {
                 customer_id: selectedChat?.profileData?.customer?._id,
                 vendor_id: selectedChat?.profileData?.vendor?._id,
@@ -82,7 +104,7 @@ function VendorInbox() {
         <div>
             {contextHolder}
 
-            <Inbox chats={chat} userType={'vendor'} handleSendMessage={handleSendMessage} selectedChat={selectedChat} setSelectedChat={setSelectedChat} message={Message} setMessage={setMessage} />
+            <Inbox chats={chat} userType={'vendor'} handleSendMessage={handleSendMessage} selectedChat={selectedChat} setSelectedChat={setSelectedChat} message={Message} setMessage={setMessage} messages={messages} />
 
         </div>
     )

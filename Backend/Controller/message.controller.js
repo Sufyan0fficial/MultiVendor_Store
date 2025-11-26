@@ -57,6 +57,13 @@ const customerMessage = async(data)=>{
 
 }
 
+const fetchUserChats = asyncWrapper(async(req,res,next)=>{
+    const id = req.params?.id
+    const chats = await MessageModel.findOne({_id:id})
+    return res.status(200).json({success:true,data:chats?.messages})
+
+})
+
 
 const CustomerChatData = asyncWrapper(async(req,res,next)=>{
     const id =  req.params?.customerid
@@ -76,4 +83,4 @@ const VendorChatData = asyncWrapper(async(req,res,next)=>{
 })
 
 
-module.exports = {UserOnline, customerMessage, CustomerChatData, VendorChatData}
+module.exports = {UserOnline, customerMessage, CustomerChatData, VendorChatData, fetchUserChats}

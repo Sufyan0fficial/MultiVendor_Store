@@ -15,6 +15,8 @@ import { FiHeart } from 'react-icons/fi';
 import { addProducttoCart, addProducttoWishlist, removeFromCart, removeFromWishlist } from '../../Redux/CartWishlistSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import ChatDialog from '../../components/ChatDialog';
+import Lottie from 'lottie-react';
+import animationData from '../../assets/Animations/ShopingCart.json'
 
 
 function ProductDetailsPage() {
@@ -37,10 +39,12 @@ function ProductDetailsPage() {
     const dispatch = useDispatch()
     const [productReviews, setProductReviews] = useState([])
     const [chatDialogOpen, setChatDialogOpen] = useState(false)
+    const [loading, setLoading] = useState(false)
 
 
     useEffect(() => {
         const FetchProduct = async () => {
+            setLoading(true)
             try {
                 const res = await fetchProduct(location.state?.product_id)
                 if (res.status === 200) {
@@ -49,6 +53,9 @@ function ProductDetailsPage() {
                 }
             } catch (error) {
                 Message(messageApi, 'error', 'Failed to fetch product details')
+            }
+            finally{
+                setLoading(false)
             }
         }
         FetchProduct()
@@ -112,15 +119,24 @@ function ProductDetailsPage() {
 
 
     return (
+        
+    loading ?
+        <div className='min-h-[calc(100vh-200px)] flex justify-center items-center w-full'>
 
+          <div style={{ width: 300, height: 300 }}>
+            <Lottie animationData={animationData} loop={true} />
+          </div>
+        </div>
+        :
+    
         product ?
-            <div className=' w-full flex items-center justify-center cursor-auto my-10 h-full'>
-                <div className='max-auto !max-w-7xl '>
+            <div className=' w-full flex items-center justify-center cursor-auto my-10 h-full '>
                     {
                         contextHolder
                     }
+                <div className='max-auto !max-w-7xl  w-full !px-10'>
 
-                    <div className='flex flex-col md:flex-row gap-10 md:tems-stretch h-full bg-white px-6 md:px-10 py-10 md:rounded-md'>
+                    <div className='flex flex-col md:flex-row gap-10 md:tems-stretch h-full bg-white px-6 md:!px-10 py-10 md:rounded-md'>
                         <div className='w-full md:w-1/2'>
                             <div className=' flex  justify-center'>
                                 <img src={`${import.meta.env.VITE_API_DEV}/uploads/${product?.images?.[0]}`} alt='product_img' className='h-[300px] md:h-[400px] object-contain md:object-cover' />

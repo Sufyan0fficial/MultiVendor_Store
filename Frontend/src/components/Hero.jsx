@@ -1,6 +1,8 @@
 import React from 'react'
+import { useNavigate } from 'react-router'
 
 function Hero() {
+  const navigate = useNavigate()
   return (
     <section 
       className='min-h-[calc(100vh-60px)] max-h-screen md:max-h-full md:min-h-[calc(100vh-160px)]  bg-gray-100 flex items-center bg-cover bg-center bg-no-repeat'
@@ -25,7 +27,7 @@ function Hero() {
               aliquam deserunt officia. Dolorum saepe nulla provident.
             </p>
             
-            <button className='bg-black text-white px-8 py-4 rounded-lg text-lg font-medium hover:bg-gray-800 transition-colors cursor-pointer'>
+            <button className='bg-black text-white px-8 py-4 rounded-lg text-lg font-medium hover:bg-gray-800 transition-colors cursor-pointer' onClick={()=>navigate('/products')}>
               Shop Now
             </button>
           </div>

@@ -6,11 +6,14 @@ import { message } from 'antd';
 import { Message } from '../../utils/notifymessage';
 import { IoEyeOutline } from 'react-icons/io5';
 import { MdOutlineDelete } from 'react-icons/md';
+import Lottie from 'lottie-react';
+import animationData from '../../assets/Animations/ShopingCart.json'
 
 function AllEvents() {
     const [Events, setEvents] = useState([])
     const [messageApi, contextHolder] = message.useMessage()
     const { screenWidth } = useSelector(state => state?.UtilReducer)
+    const [loading, setLoading] = useState(false)
     const headers = [
         { key: "_id", name: "Product ID" },
         { key: "product_name", name: "Name" },
@@ -23,6 +26,7 @@ function AllEvents() {
     const { sellerData } = useSelector(state => state?.SellerReducer)
     useEffect(() => {
         const getEvents = async () => {
+            setLoading(true)
             try {
                 const res = await Get_Events(sellerData?._id)
                 if (res.status === 200) {
@@ -35,6 +39,9 @@ function AllEvents() {
                 }
             } catch (error) {
                 Message(messageApi, 'error', 'Something went Wrong')
+            }
+            finally {
+                setLoading(false)
             }
         }
         getEvents()
@@ -57,11 +64,20 @@ function AllEvents() {
         }
     }
     return (
-        <div className='min-h-full border border-gray-200 border-r-0 border-t-0 rounded-xl'>
-            {contextHolder}
-            <ProfileTable headers={headers} className={'min-w-[1400px]'} data={Events} type={'event'} handleDelete={handleDeleteEvent}/>
+        loading ?
+            <div className='min-h-[calc(100vh-200px)] flex justify-center items-center w-full'>
 
-        </div>
+                <div style={{ width: 300, height: 300 }}>
+                    <Lottie animationData={animationData} loop={true} />
+                </div>
+            </div>
+            :
+
+            <div className='min-h-full border border-gray-200 border-r-0 border-t-0 rounded-xl'>
+                {contextHolder}
+                <ProfileTable headers={headers} className={'min-w-[1400px]'} data={Events} type={'event'} handleDelete={handleDeleteEvent} />
+
+            </div>
     )
 }
 

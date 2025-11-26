@@ -19,7 +19,7 @@ function TrackOrder() {
             <div className='max-w-7xl mx-auto px-6 md:px-10 flex justify-center items-center min-h-full'>
                 <div className='flex justify-center items-center'>
                     {
-                        orderStatus === 'Processing' ?
+                        orderStatus === 'Pending' ?
                             <div className='flex flex-col justify-center items-center'>
 
                                 <Lottie animationData={OrderProcessing} loop={true} style={{width:'200px',height:'200px'}}/>

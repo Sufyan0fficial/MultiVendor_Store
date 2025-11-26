@@ -22,7 +22,7 @@ function initSocket(server) {
       console.log('customer message data',data)
         customerMessage(data)
         console.log('data to emit is',data?.vendor_id)
-      io.to(data?.vendor_id).emit('message',data)
+      io.to(data?.vendor_id).emit('message-t-vendor',data)
     })
     socket.on('join-customer-room',(data)=>{
       socket.join(data?.id)
@@ -31,7 +31,7 @@ function initSocket(server) {
     socket.on('vendor message',(data)=>{
       console.log('vendor message',data)
         customerMessage(data)
-      io.to(data?.customer_id).emit('message',data)
+      io.to(data?.customer_id).emit('message-t-customer',data)
     })
   });
 

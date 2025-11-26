@@ -21,14 +21,14 @@ function SellerHeader() {
             <img src="https://shopo.quomodothemes.website/assets/images/logo.svg" alt="logo" className='object-cover object-center h-7 md:h-12' />
         </div>
         <div className='flex items-center gap-8 '>
-            <div className='hidden md:flex items-center gap-8'>
+            {/* <div className='hidden md:flex items-center gap-8'>
                 <GoGift size={28} className='cursor-pointer hover:text-red-500 transition-colors duration-500 ease-in-out'/>
                 <GoTag size={25} className='cursor-pointer hover:text-red-500 transition-colors duration-500 ease-in-out'/>
                 <LuShoppingBag size={25} className='cursor-pointer hover:text-red-500 transition-colors duration-500 ease-in-out'/>
                 <AiFillProduct size={25} className='cursor-pointer hover:text-red-500 transition-colors duration-500 ease-in-out'/>
                 <IoChatboxEllipsesOutline size={25} className='cursor-pointer hover:text-red-500 transition-colors duration-500 ease-in-out' />
 
-            </div>
+            </div> */}
             <div className='flex items-center cursor-pointer' onClick={()=>navigate(`/shop/${sellerData?._id}`)}>
                 <img src={`${import.meta.env.VITE_API_DEV}/uploads/${sellerData?.avatar}`} alt="profile_img" className='w-12 h-12 md:h-16 md:w-16 rounded-full flex items-center justify-center border-2 border-green-500'/>
             </div>
