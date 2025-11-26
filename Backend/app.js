@@ -55,7 +55,7 @@ app.use((req, res) => {
   }
   
   // For all non-API routes, serve the React app
-  res.sendFile(path.join(__dirname, 'Client', 'dist', 'index.html'));
+  res.sendFile(path.join(__dirname, 'Frontend', 'dist', 'index.html'));
 });
 
 app.use(ErrorHandler)
