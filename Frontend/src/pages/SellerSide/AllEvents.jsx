@@ -20,7 +20,6 @@ function AllEvents() {
         { key: "original_price", name: "Price" },
         { key: "stock", name: "Stock" },
         { key: "sold_out", name: "Sold out" },
-        { key: "preview", name: "Preview" },
         { key: "delete", name: "Delete" },
     ];
     const { sellerData } = useSelector(state => state?.SellerReducer)
@@ -31,8 +30,9 @@ function AllEvents() {
                 const res = await Get_Events(sellerData?._id)
                 if (res.status === 200) {
                     const data = res.data?.data?.length > 0 && res.data?.data?.map((item, index) => ({
-                        ...item, preview: <IoEyeOutline size={screenWidth <= 768 ? 20 : 25} className='cursor-pointer hover:text-green-600 text-gray-500' />
-                        , delete: <MdOutlineDelete size={screenWidth <= 768 ? 20 : 25} className='cursor-pointer hover:text-red-500 text-gray-500' />
+                        ...item,
+                        //  preview: <IoEyeOutline size={screenWidth <= 768 ? 20 : 25} className='cursor-pointer hover:text-green-600 text-gray-500' />,
+                         delete: <MdOutlineDelete size={screenWidth <= 768 ? 20 : 25} className='cursor-pointer hover:text-red-500 text-gray-500' onClick={()=>handleDeleteEvent(item)}/>
 
                     }))
                     setEvents(data)
@@ -53,8 +53,9 @@ function AllEvents() {
             if (res.status === 200) {
                 Message(messageApi, 'success', 'Event Deleted Successfully')
                 const data = res.data?.data?.length > 0 && res.data?.data?.map((item, index) => ({
-                    ...item, preview: <IoEyeOutline size={screenWidth <= 768 ? 20 : 25} className='cursor-pointer hover:text-green-600 text-gray-500' />
-                    , delete: <MdOutlineDelete size={screenWidth <= 768 ? 20 : 25} className='cursor-pointer hover:text-red-500 text-gray-500' />
+                    ...item,
+                    //  preview: <IoEyeOutline size={screenWidth <= 768 ? 20 : 25} className='cursor-pointer hover:text-green-600 text-gray-500' />,
+                     delete: <MdOutlineDelete size={screenWidth <= 768 ? 20 : 25} className='cursor-pointer hover:text-red-500 text-gray-500' onClick={()=>handleDeleteEvent(item)}/>
 
                 }))
                 setEvents(data)
@@ -75,7 +76,7 @@ function AllEvents() {
 
             <div className='min-h-full border border-gray-200 border-r-0 border-t-0 rounded-xl'>
                 {contextHolder}
-                <ProfileTable headers={headers} className={'min-w-[1400px]'} data={Events} type={'event'} handleDelete={handleDeleteEvent} />
+                <ProfileTable headers={headers} className={'min-w-[1200px]'} data={Events} type={'event'} handleDelete={handleDeleteEvent} />
 
             </div>
     )

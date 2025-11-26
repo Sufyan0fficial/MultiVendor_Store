@@ -27,12 +27,12 @@ function Profile() {
 
 
         },
-        {
-            text:'Refunds',
-            icon: <HiOutlineReceiptRefund size={width <= 768 ? 20 : 25} color={activeMenu === 3 && 'red'}/>
+        // {
+        //     text:'Refunds',
+        //     icon: <HiOutlineReceiptRefund size={width <= 768 ? 20 : 25} color={activeMenu === 3 && 'red'}/>
 
 
-        },
+        // },
         {
             text:'Inbox',
             icon: <BsChatDots size={width <= 768 ? 20 : 25} color={activeMenu === 4 && 'red'}/>

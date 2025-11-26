@@ -98,21 +98,18 @@ function ProfilePageWrapper({ activeMenu, setActiveMenu }) {
                 activeMenu === 2 &&
                 <ProfileTable headers={headers} data={customerOrders} className={'min-w-[1200px]'} />
             }
+            
             {
                 activeMenu === 3 &&
-                <ProfileTable headers={headers} data={orders} className={'min-w-[800px]'} />
-            }
-            {
-                activeMenu === 4 &&
 
                 <CustomerInbox />
             }
             {
-                activeMenu === 6 &&
+                activeMenu === 5 &&
                 <Logout setActiveMenu={setActiveMenu} />
             }
             {
-                activeMenu === 5 &&
+                activeMenu === 4 &&
                 <Addresses />
             }
 

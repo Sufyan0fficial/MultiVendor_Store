@@ -91,23 +91,23 @@ function SellerDashboardSidebar({ screenWidth }) {
 
 
         },
-        {
-            name: 'Refunds',
-            icon: <HiOutlineReceiptRefund size={screenWidth <= 768 ? 20 : 33}  color={activeMenu === 'refunds' ? '#dc143c' : ''}/>,
-            navigate: '/dashboard/refunds',
-            key:'refunds'
+        // {
+        //     name: 'Refunds',
+        //     icon: <HiOutlineReceiptRefund size={screenWidth <= 768 ? 20 : 33}  color={activeMenu === 'refunds' ? '#dc143c' : ''}/>,
+        //     navigate: '/dashboard/refunds',
+        //     key:'refunds'
 
 
-        },
-        {
-            name: 'settings',
-            icon: <FiSettings size={screenWidth <= 768 ? 20 : 33}  color={activeMenu === 'settings' ? '#dc143c' : ''}/>,
-            navigate: '/dashboard/settings',
-            key:'settings'
+        // },
+        // {
+        //     name: 'settings',
+        //     icon: <FiSettings size={screenWidth <= 768 ? 20 : 33}  color={activeMenu === 'settings' ? '#dc143c' : ''}/>,
+        //     navigate: '/dashboard/settings',
+        //     key:'settings'
             
 
 
-        },
+        // },
     ]
     const navigate = useNavigate()
     return (

@@ -50,6 +50,12 @@ function EventsPage() {
             )
           })
         }
+        {
+            events?.length === 0 &&
+            <div className='text-black text-lg text-center w-full'>
+              No Event Found !
+            </div>
+          }
       </div>
     </div>
   )

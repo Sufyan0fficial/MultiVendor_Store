@@ -40,7 +40,7 @@ function AllProducts() {
 
                             {
                                 ...item, preview: <IoEyeOutline size={screenWidth <= 768 ? 20 : 25} className='cursor-pointer hover:text-green-600 text-gray-500' onClick={() => navigate(`/products/${productId}`, { state: { product_id: item?._id } })} />
-                                , delete: <MdOutlineDelete size={screenWidth <= 768 ? 20 : 25} className='cursor-pointer hover:text-red-500 text-gray-500' />
+                                , delete: <MdOutlineDelete size={screenWidth <= 768 ? 20 : 25} className='cursor-pointer hover:text-red-500 text-gray-500' onClick={()=>handleDeleteProduct(item)}/>
 
                             }
                         )
@@ -63,11 +63,19 @@ function AllProducts() {
             const res = await DeleteProduct(data?._id)
             if (res.status === 200) {
                 Message(messageApi, 'success', 'Product Deleted Successfully')
-                const data = res.data?.data?.length > 0 && res.data?.data?.map((item, index) => ({
-                    ...item, preview: <IoEyeOutline size={screenWidth <= 768 ? 20 : 25} className='cursor-pointer hover:text-green-600 text-gray-500' />
-                    , delete: <MdOutlineDelete size={screenWidth <= 768 ? 20 : 25} className='cursor-pointer hover:text-red-500 text-gray-500' />
+                const data = res.data?.data?.length > 0 && res.data?.data?.map((item, index) => 
+                { 
 
-                }))
+                  const productId = item?.product_name?.replaceAll(" ", "-")
+                    
+                    return {
+                    ...item, preview: <IoEyeOutline size={screenWidth <= 768 ? 20 : 25} className='cursor-pointer hover:text-green-600 text-gray-500'  onClick={() => navigate(`/products/${productId}`, { state: { product_id: item?._id } })}/>
+                    , delete: <MdOutlineDelete size={screenWidth <= 768 ? 20 : 25} className='cursor-pointer hover:text-red-500 text-gray-500' onClick={()=>handleDeleteProduct(item)}/>
+
+                }
+                    
+            }
+            )
                 setProducts(data)
             }
         } catch (error) {
